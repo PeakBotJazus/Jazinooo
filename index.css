@@ -1,0 +1,15 @@
+body { background: #1a1a1a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+.casino-container { text-align: center; background: #333; padding: 30px; border-radius: 20px; border: 5px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+.slots { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+.reel { width: 80px; height: 100px; background: white; color: black; font-size: 3rem; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 3px solid #555; }
+.balance { font-size: 1.5rem; margin-bottom: 10px; color: #4caf50; }
+button { padding: 10px 20px; cursor: pointer; background: #ffd700; border: none; border-radius: 5px; font-weight: bold; }
+button:disabled { background: #555; }
+
+/* Анимация вращения */
+.spinning { animation: blur 0.1s infinite; }
+@keyframes blur {
+    0% { transform: translateY(-5px); filter: blur(2px); }
+    50% { transform: translateY(5px); filter: blur(2px); }
+    100% { transform: translateY(-5px); filter: blur(2px); }
+}
