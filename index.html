@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Royal Deluxe</title>
+    <title>Casino Royal: Perfect View</title>
     <style>
         :root {
             --gold: #ffd700;
             --bg-grad: radial-gradient(circle, #3d2b01 0%, #000000 100%);
             --win-green: #2ecc71;
-            --cell-h: 22vh; /* Большая высота для ПК по умолчанию */
+            --cell-h: 20vh; /* Высота для ПК */
         }
 
         /* Адаптация под мобильные устройства */
-        @media (max-width: 1024px) { :root { --cell-h: 12vh; } }
-        @media (max-width: 480px) { :root { --cell-h: 64px; } }
+        @media (max-width: 480px) { 
+            :root { --cell-h: 68px; } 
+        }
 
         body, html {
             height: 100%; margin: 0; padding: 0;
@@ -23,104 +24,104 @@
             overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
 
-        header { width: 100%; padding: 20px 0; text-align: center; background: rgba(0,0,0,0.7); border-bottom: 1px solid #543d01; }
-        .balance-box { font-size: 1.8rem; color: var(--gold); font-weight: 900; }
+        header { width: 100%; padding: 15px 0; text-align: center; background: rgba(0,0,0,0.7); border-bottom: 1px solid #543d01; }
+        .balance-box { font-size: 1.6rem; color: var(--gold); font-weight: 900; }
 
-        /* ИСПРАВЛЕННОЕ ЛОББИ: ТЕПЕРЬ КРУПНО */
+        /* ЛОББИ - КРУПНО НА ПК, ЧЕТКО НА МОБИЛКАХ */
         #lobby {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Минимум 280px на карточку */
-            gap: 25px; padding: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; padding: 25px;
             max-width: 1400px; margin: auto;
             box-sizing: border-box;
         }
 
         @media (max-width: 480px) {
-            #lobby { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+            #lobby { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+            .game-card { height: 140px !important; }
         }
 
         .game-card {
-            height: 220px; border-radius: 18px; border: 2px solid #543d01;
+            height: 200px; border-radius: 15px; border: 2px solid #543d01;
             cursor: pointer; display: flex; align-items: flex-end;
             overflow: hidden; background-size: cover; background-position: center; transition: 0.3s;
         }
-        @media (max-width: 480px) { .game-card { height: 160px; } }
-        
-        .game-card:hover { border-color: var(--gold); transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .game-card h3 { background: rgba(0,0,0,0.85); width: 100%; text-align: center; margin: 0; padding: 15px; font-size: 0.9rem; color: var(--gold); text-transform: uppercase; }
+        .game-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        .game-card h3 { background: rgba(0,0,0,0.85); width: 100%; text-align: center; margin: 0; padding: 10px; font-size: 0.75rem; color: var(--gold); text-transform: uppercase; }
 
         /* ЭКРАН ИГРЫ */
-        #game-screen { display: none; flex-direction: column; width: 100%; height: calc(100vh - 80px); align-items: center; justify-content: center; position: relative; }
-        .back-btn { position: absolute; top: 10px; left: 20px; padding: 10px 20px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; z-index: 100; }
+        #game-screen { display: none; flex-direction: column; width: 100%; min-height: calc(100vh - 65px); align-items: center; justify-content: flex-start; padding-bottom: 30px; }
+        .back-btn { align-self: flex-start; margin: 10px; padding: 8px 15px; background: #222; color: #ccc; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 0.7rem; z-index: 100; }
 
-        /* КОМПОНОВКА (ПК: в ряд, МОБ: в столбик) */
-        .game-area { display: flex; align-items: center; justify-content: center; gap: 30px; width: 95%; max-width: 1400px; flex-grow: 1; }
-        @media (max-width: 1024px) { .game-area { flex-direction: column; gap: 10px; } }
+        /* ИГРОВАЯ ОБЛАСТЬ */
+        .game-area { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 1200px; padding: 0 5px; box-sizing: border-box; }
+        @media (max-width: 1024px) { .game-area { flex-direction: column; } }
 
-        /* КОЛЕСО ТАЛИСМАНА */
-        #talisman-wheel-box { display: none; position: relative; width: 180px; height: 180px; flex-shrink: 0; }
-        @media (min-width: 1025px) { #talisman-wheel-box { width: 40vh; height: 40vh; } }
-        #talisman-wheel {
-            width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--gold);
+        /* КОЛЕСО */
+        #talisman-wheel-box { display: none; position: relative; width: 160px; height: 160px; flex-shrink: 0; margin-bottom: 10px; }
+        @media (min-width: 1025px) { #talisman-wheel-box { width: 35vh; height: 35vh; margin-right: 15px; } }
+        #talisman-wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--gold); 
             background: conic-gradient(#d32f2f 0 72deg, #2e7d32 72deg 144deg, #1976d2 144deg 216deg, #ff9800 216deg 288deg, #ff00ff 288deg 360deg);
-            transition: transform 3.5s cubic-bezier(0.1, 0, 0.1, 1); position: relative; box-shadow: 0 0 40px black;
+            transition: transform 3.5s cubic-bezier(0.1, 0, 0.1, 1); position: relative; box-shadow: 0 0 30px black;
         }
-        .wheel-ptr { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 35px solid var(--gold); z-index: 50; }
-        .sector-label { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; font-size: 0.8rem; color: white; padding-top: 15px; box-sizing: border-box; pointer-events: none; }
-        @media (min-width: 1025px) { .sector-label { font-size: 1.4rem; padding-top: 30px; } }
+        .wheel-ptr { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--gold); z-index: 50; }
+        .sector-text { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; color: white; padding-top: 10px; font-size: 0.7rem; pointer-events: none; }
 
         /* СЛОТЫ */
-        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; flex-grow: 1; max-width: 900px; }
-        .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 30px); width: 30px; }
-        .lnum { width: 28px; height: 22px; background: #000; border: 2px solid var(--gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--gold); font-weight: bold; }
-
-        .grid-frame { background: #000; border: 4px solid var(--gold); border-radius: 25px; padding: 12px; flex-grow: 1; }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; border-radius: 15px; overflow: hidden; }
+        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; }
+        .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 20px); width: 28px; flex-shrink: 0; }
+        .lnum { width: 24px; height: 18px; background: #000; border: 1.5px solid var(--gold); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--gold); font-weight: bold; }
+        
+        .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 18px; padding: 8px; flex-grow: 1; max-width: 700px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; border-radius: 10px; overflow: hidden; }
         .cell { height: var(--cell-h); background: #111; position: relative; overflow: hidden; border: 1px solid #222; }
+        .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.55); }
         .reel-strip { position: absolute; width: 100%; display: flex; flex-direction: column; }
-        .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.6); }
 
-        /* РУЛЕТКА */
-        #roulette-ui { display: none; flex-direction: column; align-items: center; }
-        #rou-wheel { width: 300px; height: 300px; border-radius: 50%; border: 10px solid #333; margin-bottom: 25px; transition: 4s ease-out; }
+        /* УПРАВЛЕНИЕ (КАПСУЛЫ) */
+        .controls { display: flex; align-items: center; justify-content: center; gap: 10px; width: 95%; max-width: 800px; margin-top: 20px; }
+        @media (max-width: 480px) { .controls { gap: 8px; } }
 
-        /* УПРАВЛЕНИЕ (КАК НА ФОТО) */
-        .controls { display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%; max-width: 800px; margin: 20px 0; }
         .bet-capsule {
             display: flex; align-items: center; justify-content: space-between;
-            background: #000; border: 3px solid var(--gold); border-radius: 50px;
-            padding: 8px 25px; width: 200px; flex-shrink: 0;
+            background: #000; border: 2.5px solid var(--gold); border-radius: 50px;
+            padding: 5px 12px; width: 160px; flex-shrink: 0;
         }
-        .bet-btn { background: var(--gold); border: none; width: 38px; height: 38px; border-radius: 50%; font-weight: 900; cursor: pointer; font-size: 1.4rem; }
-        .bet-info { text-align: center; font-size: 0.7rem; color: #fff; text-transform: uppercase; }
-        .bet-info b { display: block; font-size: 1.1rem; }
+        .bet-btn { background: var(--gold); border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: 900; cursor: pointer; color: black; font-size: 1.3rem; }
+        .bet-info { text-align: center; font-size: 0.6rem; color: #fff; text-transform: uppercase; }
+        .bet-info b { display: block; font-size: 0.9rem; }
 
         .spin-btn {
-            flex-grow: 1; padding: 22px; border-radius: 50px; border: 3px solid #fff;
+            flex-grow: 1; padding: 18px; border-radius: 40px; border: 2px solid #fff;
             background: linear-gradient(to bottom, #44cc44, #1a881a);
-            color: white; font-size: 1.8rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            color: white; font-size: 1.5rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
         }
-        .spin-btn:active { transform: translateY(4px); box-shadow: none; }
         .spin-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        #win-tag { color: var(--gold); font-weight: 900; font-size: 1.8rem; text-transform: uppercase; min-height: 40px; }
+        #win-tag { margin-top: 10px; color: var(--gold); font-weight: 900; font-size: 1.6rem; text-transform: uppercase; height: 35px; }
 
-        /* ПОДСВЕТКА ВЫИГРЫША */
-        .win-active { border: 3px solid var(--gold) !important; background: rgba(255, 215, 0, 0.3) !important; z-index: 10; animation: flash 0.5s infinite alternate; }
-        @keyframes flash { from { opacity: 1; } to { opacity: 0.6; } }
+        /* РУЛЕТКА */
+        #roulette-ui { display: none; flex-direction: column; align-items: center; width: 100%; }
+        #rou-wheel { width: 260px; height: 260px; border-radius: 50%; border: 6px solid #333; margin-bottom: 20px; transition: 4s cubic-bezier(0.1,0,0.1,1); }
+        .bet-opt { background: #111; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; border: 1.5px solid #444; font-size: 0.8rem; }
+        .bet-opt.active { border-color: var(--gold); }
 
+        /* МОДАЛКА */
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; }
-        .modal-content { background: #111; padding: 40px; border-radius: 30px; border: 4px solid var(--gold); text-align: center; width: 90%; max-width: 400px; }
+        .modal-content { background: #111; padding: 30px; border-radius: 25px; border: 3px solid var(--gold); text-align: center; width: 85%; max-width: 350px; }
+        
+        .win-active { border: 2.5px solid var(--gold) !important; background: rgba(255, 215, 0, 0.2) !important; animation: blink 0.5s infinite alternate; }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
 <div id="modal-overlay">
     <div class="modal-content">
-        <h1 id="modal-title" style="color:var(--gold); margin-bottom:10px;">БОНУС!</h1>
-        <p id="modal-text" style="font-size:1.2rem;"></p>
-        <button onclick="closeModal()" style="margin-top:25px; padding:15px 45px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer; font-size:1.2rem;">ОК</button>
+        <h2 id="modal-title" style="color:var(--gold); margin:0;">БОНУС!</h2>
+        <p id="modal-text"></p>
+        <button onclick="closeModal()" style="margin-top:20px; padding:12px 35px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer; font-size:1.1rem;">ОК</button>
     </div>
 </div>
 
@@ -144,11 +145,11 @@
         <div id="talisman-wheel-box">
             <div class="wheel-ptr"></div>
             <div id="talisman-wheel">
-                <div class="sector-label" style="transform: rotate(36deg)">x2</div>
-                <div class="sector-label" style="transform: rotate(108deg)">x5</div>
-                <div class="sector-label" style="transform: rotate(180deg)">x10</div>
-                <div class="sector-label" style="transform: rotate(252deg)">10 FS</div>
-                <div class="sector-label" style="transform: rotate(324deg)">15 FS</div>
+                <div class="sector-text" style="transform: rotate(36deg)">x2</div>
+                <div class="sector-text" style="transform: rotate(108deg)">x5</div>
+                <div class="sector-text" style="transform: rotate(180deg)">x10</div>
+                <div class="sector-text" style="transform: rotate(252deg)">10 FS</div>
+                <div class="sector-text" style="transform: rotate(324deg)">15 FS</div>
             </div>
         </div>
 
@@ -159,14 +160,14 @@
         </div>
 
         <div id="roulette-ui">
-            <div style="position:relative; width:300px; height:300px;">
-                <div class="wheel-ptr" style="top:-25px;"></div>
-                <div id="rou-wheel" style="width:100%; height:100%; border-radius:50%; background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg); transition: 4s ease-out;"></div>
+            <div style="position:relative; width:260px; height:260px;">
+                <div class="wheel-ptr" style="top:-15px;"></div>
+                <div id="rou-wheel" style="width:100%; height:100%; border-radius:50%; background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #212121 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg);"></div>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:300px; margin-top:20px;">
-                <div class="bet-opt" id="r-red" style="color:#ff4444; background:#111; padding:15px; border-radius:12px; text-align:center; border:2px solid #444; cursor:pointer;" onclick="setRouBet('red')">КРАСНОЕ</div>
-                <div class="bet-opt" id="r-black" style="color:#aaa; background:#111; padding:15px; border-radius:12px; text-align:center; border:2px solid #444; cursor:pointer;" onclick="setRouBet('black')">ЧЕРНОЕ</div>
-                <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44; background:#111; padding:15px; border-radius:12px; text-align:center; border:2px solid #444; cursor:pointer;" onclick="setRouBet('zero')">ЗЕРО (x36)</div>
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:280px; margin-top:15px;">
+                <div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red')">КРАСНОЕ</div>
+                <div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black')">ЧЕРНОЕ</div>
+                <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero')">ЗЕРО (x36)</div>
             </div>
         </div>
     </div>
@@ -174,7 +175,7 @@
     <div class="controls">
         <div class="bet-capsule">
             <button onclick="changeBet(-1)" class="bet-btn">-</button>
-            <div class="bet-info">СТАВКА <b id="display-bet">50.00</b></div>
+            <div class="bet-info">СТАВКА <b id="display-bet">0.50</b></div>
             <button onclick="changeBet(1)" class="bet-btn">+</button>
         </div>
         <button class="spin-btn" id="spin-btn" onclick="handlePlay()">ИГРАТЬ</button>
@@ -184,48 +185,41 @@
 
 <script>
     let balance = parseFloat(localStorage.getItem('casino_bal')) || 1000.00;
-    let betIdx = 4;
-    const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00];
-    let isPlaying = false, currentGame = null, rouBet = null, freeSpins = 0, currentBonusWin = 0;
+    let betIdx = 1, isPlaying = false, currentGame = null, rouBet = null, freeSpins = 0;
+    const bets = [0.10, 0.50, 1.00, 5.00, 10.00, 50.00, 100.00];
     let talRot = 0, rouRot = 0;
 
     const paylines = [
-       [5, 6, 7, 8, 9], [0, 1, 2, 3, 4], [10, 11, 12, 13, 14],
-       [0, 6, 12, 8, 4], [10, 6, 2, 8, 14], [5, 1, 2, 3, 9],
-       [5, 11, 12, 13, 9], [0, 1, 7, 13, 14], [10, 11, 7, 3, 4], [5, 6, 2, 6, 5]
+       [1,4,7,10,13], [0,3,6,9,12], [2,5,8,11,14], // Линии 1, 2, 3
+       [0,4,8,10,12], [2,4,6,10,14], // Линии 4, 5
+       [0,3,7,11,14], [2,5,7,9,12],  // Линии 6, 7
+       [1,3,6,9,13], [1,5,8,11,13],  // Линии 8, 9
+       [0,4,6,10,12]                 // Линия 10
     ];
 
     const sideNums = [4, 2, 8, 1, 10, 6, 9, 7, 3, 5];
-    const wheelNums = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-    const redNums = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+    const wheelNums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+    const redNums = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
     const gameConfigs = {
-        talisman: { symbols:[{char:'🐼', val:500},{char:'🏮', val:200}], scatter:'🧧', coin:'🪙' },
-        book: { symbols:[{char:'🤠', val:500},{char:'👺', val:200}], scatter:'📖' },
-        diamonds: { symbols:[{char:'💎', val:500},{char:'7️⃣', val:200}], scatter:'⭐' },
-        space: { symbols:[{char:'👽', val:500},{char:'🚀', val:200}], scatter:'🛸' },
-        fruits: { symbols:[{char:'🍎', val:500},{char:'🍉', val:200}], scatter:'🎁' },
-        neon: { symbols:[{char:'7️⃣', val:500},{char:'💎', val:200}], scatter:'🔥' },
-        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'⚔️', val:200}], scatter:'🦜' }
+        talisman: { symbols:[{char:'🐼', val:500},{char:'🏮', val:200},{char:'🪭', val:100}], scatter:'🧧', coin:'🪙' },
+        book: { symbols:[{char:'🤠', val:500},{char:'👺', val:200},{char:'🪲', val:100}], scatter:'📖' },
+        diamonds: { symbols:[{char:'💎', val:500},{char:'7️⃣', val:200},{char:'🔔', val:100}], scatter:'⭐' },
+        space: { symbols:[{char:'👽', val:500},{char:'🚀', val:200},{char:'🪐', val:100}], scatter:'🛸' },
+        fruits: { symbols:[{char:'🍎', val:500},{char:'🍒', val:200},{char:'🍉', val:100}], scatter:'🎁' },
+        neon: { symbols:[{char:'7️⃣', val:500},{char:'💎', val:200},{char:'🍀', val:100}], scatter:'🔥' },
+        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'💰', val:200},{char:'⚓', val:100}], scatter:'🦜' }
     };
 
     function openGame(id) {
-        if (id === 'roulette') {
-            document.getElementById('lobby').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex';
-            document.getElementById('roulette-ui').style.display = 'flex';
-            document.getElementById('slot-ui-wrap').style.display = 'none';
-            document.getElementById('talisman-wheel-box').style.display = 'none';
-            currentGame = { type: 'roulette' };
-        } else {
-            currentGame = gameConfigs[id];
-            document.getElementById('lobby').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex';
-            document.getElementById('roulette-ui').style.display = 'none';
-            document.getElementById('slot-ui-wrap').style.display = 'flex';
-            document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
-            initGrid(); initLines();
-        }
+        currentGame = gameConfigs[id] || { type: 'roulette' };
+        document.getElementById('lobby').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        const isRou = (id === 'roulette');
+        document.getElementById('roulette-ui').style.display = isRou ? 'flex' : 'none';
+        document.getElementById('slot-ui-wrap').style.display = isRou ? 'none' : 'flex';
+        document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
+        if (!isRou) { initGrid(); initLines(); }
         updateUI();
     }
 
@@ -240,12 +234,12 @@
     }
 
     function changeBet(v) { if (!isPlaying) { betIdx = Math.max(0, Math.min(bets.length - 1, betIdx + v)); updateUI(); } }
-    function setRouBet(t) { if (!isPlaying) { rouBet = t; document.querySelectorAll('.bet-opt').forEach(el => el.style.borderColor = '#444'); document.getElementById('r-'+t).style.borderColor = 'var(--gold)'; } }
+    function setRouBet(t) { if (!isPlaying) { rouBet = t; document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); document.getElementById('r-'+t).classList.add('active'); } }
 
     function handlePlay() {
         if (isPlaying || (balance < bets[betIdx] && freeSpins === 0)) return;
         isPlaying = true; document.getElementById('spin-btn').disabled = true; document.getElementById('win-tag').innerText = "";
-        if (currentGame.type === 'roulette') spinRoulette(); else spinSlots();
+        if (document.getElementById('roulette-ui').style.display === 'flex') spinRoulette(); else spinSlots();
     }
 
     function spinSlots() {
@@ -267,16 +261,17 @@
         let win = 0;
         paylines.forEach(line => {
             let match = 1, first = res[line[0]];
+            if (first === currentGame.scatter || first === currentGame.coin) return;
             for (let i = 1; i < 5; i++) { if (res[line[i]] === first) match++; else break; }
-            if (match >= 3 && first !== currentGame.scatter && first !== currentGame.coin) {
+            if (match >= 3) {
                 win += (match === 3 ? 1 : match === 4 ? 5 : 20) * bets[betIdx];
                 for (let i = 0; i < match; i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
             }
         });
-        balance += win; if (win > 0) document.getElementById('win-tag').innerText = `WIN: ${win.toFixed(2)} BYN`;
+        balance += win; if (win > 0) document.getElementById('win-tag').innerText = `WIN: ${win.toFixed(2)}`;
         if (res.includes('🪙') && Math.random() > 0.5 && freeSpins === 0) spinTalisman();
         else if (res.filter(s=>s===currentGame.scatter).length >= 3 && freeSpins === 0) {
-            showModal("БОНУС!", "ВЫ ВЫИГРАЛИ 10 ФРИСПИНОВ!", () => { freeSpins = 10; isPlaying = false; handlePlay(); });
+            showModal("БОНУС!", "10 ФРИСПИНОВ!", () => { freeSpins = 10; isPlaying = false; handlePlay(); });
         } else if (freeSpins > 0) setTimeout(handlePlay, 1000);
         else finalize();
         save(); updateUI();
@@ -310,8 +305,8 @@
     }
 
     function finalize() { isPlaying = false; document.getElementById('spin-btn').disabled = false; }
-    function showModal(t, m, cb) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=m; document.getElementById('modal-overlay').style.display='flex'; window.modalCb = cb; }
     function closeModal() { document.getElementById('modal-overlay').style.display='none'; if(window.modalCb) window.modalCb(); }
+    function showModal(t, m, cb) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=m; document.getElementById('modal-overlay').style.display='flex'; window.modalCb = cb; }
     function save() { localStorage.setItem('casino_bal', balance); }
     function updateUI() { document.getElementById('balance').innerText = balance.toFixed(2); document.getElementById('display-bet').innerText = bets[betIdx].toFixed(2); }
     function exitGame() { if (!isPlaying) { document.getElementById('lobby').style.display = 'grid'; document.getElementById('game-screen').style.display = 'none'; } }
