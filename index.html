@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Royal: Rounded Edition</title>
+    <title>Casino Royal Deluxe</title>
     <style>
         :root {
             --gold: #ffd700;
             --bg-grad: radial-gradient(circle, #3d2b01 0%, #000000 100%);
             --win-green: #2ecc71;
             --cell-h: 20vh;
-            --radius: 15px; /* Новый радиус для ячеек */
+            --radius: 15px;
         }
 
         @media (max-width: 1024px) { :root { --cell-h: 12vh; } }
-        @media (max-width: 480px) { :root { --cell-h: 11vh; } }
+        @media (max-width: 480px) { :root { --cell-h: 68px; } }
 
         body, html {
             height: 100dvh; margin: 0; padding: 0;
@@ -24,8 +24,8 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        header { width: 100%; padding: 10px 0; text-align: center; background: rgba(0,0,0,0.7); border-bottom: 1px solid #543d01; flex-shrink: 0; }
-        .balance-box { font-size: 1.5rem; color: var(--gold); font-weight: 900; }
+        header { width: 100%; padding: 12px 0; text-align: center; background: rgba(0,0,0,0.7); border-bottom: 1px solid #543d01; flex-shrink: 0; }
+        .balance-box { font-size: 1.6rem; color: var(--gold); font-weight: 900; }
 
         /* ЛОББИ */
         #lobby {
@@ -40,46 +40,37 @@
             cursor: pointer; display: flex; align-items: flex-end;
             overflow: hidden; background-size: cover; background-position: center; transition: 0.2s;
         }
-        @media (max-width: 480px) { .game-card { height: 130px; } }
+        @media (max-width: 480px) { .game-card { height: 135px; } }
         .game-card h3 { background: rgba(0,0,0,0.85); width: 100%; text-align: center; margin: 0; padding: 8px; font-size: 0.65rem; color: var(--gold); text-transform: uppercase; }
 
-        /* ЭКРАН ИГРЫ */
+        /* ИГРОВОЙ ЭКРАН */
         #game-screen { display: none; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: space-between; padding-bottom: 10px; box-sizing: border-box; }
-        .back-btn { align-self: flex-start; margin: 5px 10px; padding: 6px 12px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 0.7rem; z-index: 100; }
+        .back-btn { align-self: flex-start; margin: 5px 10px; padding: 7px 14px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 0.7rem; z-index: 1000; }
 
         /* ИГРОВАЯ ОБЛАСТЬ */
-        .game-area { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 1300px; flex-grow: 1; padding: 0 5px; box-sizing: border-box; min-height: 0; }
-        @media (max-width: 1024px) { .game-area { flex-direction: column; gap: 5px; } }
+        .game-area { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 1300px; flex-grow: 1; padding: 0 10px; box-sizing: border-box; min-height: 0; }
+        @media (max-width: 1024px) { .game-area { flex-direction: column; gap: 10px; } }
 
-        /* КОЛЕСО */
-        #talisman-wheel-box { display: none; position: relative; width: 140px; height: 140px; flex-shrink: 0; }
-        @media (min-width: 1025px) { #talisman-wheel-box { width: 38vh; height: 38vh; } }
+        /* КОЛЕСО ТАЛИСМАНА */
+        #talisman-wheel-box { display: none; position: relative; width: 150px; height: 150px; flex-shrink: 0; }
+        @media (min-width: 1025px) { #talisman-wheel-box { width: 40vh; height: 40vh; } }
         #talisman-wheel {
             width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--gold);
             background: conic-gradient(#d32f2f 0 72deg, #2e7d32 72deg 144deg, #1976d2 144deg 216deg, #ff9800 216deg 288deg, #ff00ff 288deg 360deg);
             transition: transform 3.5s cubic-bezier(0.1, 0, 0.1, 1); position: relative;
         }
-        .wheel-ptr { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 25px solid var(--gold); z-index: 50; }
-        .sector-text { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; color: white; padding-top: 8px; font-size: 0.6rem; pointer-events: none; }
-        @media (min-width: 1025px) { .sector-text { font-size: 1.2rem; padding-top: 25px; } }
+        .wheel-ptr { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 28px solid var(--gold); z-index: 100; }
+        .sector-text { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; color: white; padding-top: 10px; font-size: 0.7rem; pointer-events: none; }
+        @media (min-width: 1025px) { .sector-text { font-size: 1.3rem; padding-top: 25px; } }
 
-        /* СЛОТЫ: ИСПРАВЛЕННЫЕ ЗАКРУГЛЕННЫЕ ЯЧЕЙКИ */
-        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; max-width: 850px; min-height: 0; }
+        /* СЛОТЫ */
+        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; max-width: 850px; }
         .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 15px); width: 24px; }
         .lnum { width: 22px; height: 18px; background: #000; border: 1px solid var(--gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: var(--gold); font-weight: bold; }
         
-        .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 20px; padding: 10px; flex-grow: 1; min-height: 0; display: flex; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; }
-        
-        .cell { 
-            height: var(--cell-h); 
-            background: #151515; 
-            position: relative; 
-            overflow: hidden; 
-            border: 1px solid #2a2a2a; 
-            border-radius: var(--radius); /* Крупное скругление */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8); /* Тень для глубины */
-        }
+        .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 20px; padding: 10px; flex-grow: 1; display: flex; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; border-radius: 12px; overflow: hidden; width: 100%; }
+        .cell { height: var(--cell-h); background: #151515; position: relative; overflow: hidden; border: 1px solid #2a2a2a; border-radius: var(--radius); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
         .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.6); }
         .reel-strip { position: absolute; width: 100%; display: flex; flex-direction: column; }
 
@@ -102,16 +93,19 @@
             color: white; font-size: 1.5rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
         }
         .spin-btn:disabled { opacity: 0.5; filter: grayscale(1); }
-
         #win-tag { color: var(--gold); font-weight: 900; font-size: 1.3rem; text-transform: uppercase; min-height: 25px; text-align: center; }
 
-        /* РУЛЕТКА */
-        #roulette-ui { display: none; flex-direction: column; align-items: center; min-height: 0; }
-        #rou-wheel { width: 220px; height: 220px; border-radius: 50%; border: 6px solid #333; margin-bottom: 10px; transition: 4s ease-out; }
-        @media (min-width: 1025px) { #rou-wheel { width: 300px; height: 300px; } }
+        /* РУЛЕТКА: ФИКС КНОПОК */
+        #roulette-ui { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; z-index: 10; }
+        #rou-wheel { width: 230px; height: 230px; border-radius: 50%; border: 6px solid #333; margin-bottom: 15px; transition: 4s ease-out; }
+        @media (min-width: 1025px) { #rou-wheel { width: 320px; height: 320px; } }
+        
+        .rou-bet-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 290px; position: relative; z-index: 2000; }
+        .bet-opt { background: #111; padding: 14px; border-radius: 12px; text-align: center; border: 2px solid #444; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .bet-opt.active { border-color: var(--gold); background: #222; box-shadow: 0 0 10px var(--gold); }
 
         /* МОДАЛКА */
-        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; }
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9000; justify-content: center; align-items: center; }
         .modal-content { background: #111; padding: 25px; border-radius: 20px; border: 3px solid var(--gold); text-align: center; width: 85%; max-width: 350px; }
         
         .win-active { border: 2.5px solid var(--gold) !important; background: rgba(255, 215, 0, 0.25) !important; animation: flash 0.5s infinite alternate; z-index: 10; }
@@ -124,7 +118,7 @@
     <div class="modal-content">
         <h2 id="modal-title" style="color:var(--gold); margin-top:0;">БОНУС!</h2>
         <p id="modal-text"></p>
-        <button onclick="closeModal()" style="margin-top:20px; padding:12px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button>
+        <button onclick="closeModal()" style="margin-top:15px; padding:10px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button>
     </div>
 </div>
 
@@ -167,10 +161,10 @@
                 <div class="wheel-ptr" style="top:-15px;"></div>
                 <div id="rou-wheel" style="background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg);"></div>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; width:260px; margin-top:10px;">
-                <div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red')">КРАСНОЕ</div>
-                <div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black')">ЧЕРНОЕ</div>
-                <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero')">ЗЕРО (x36)</div>
+            <div class="rou-bet-grid">
+                <div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red', this)">КРАСНОЕ</div>
+                <div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black', this)">ЧЕРНОЕ</div>
+                <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero', this)">ЗЕРО (x36)</div>
             </div>
         </div>
     </div>
@@ -196,32 +190,33 @@
     let talRot = 0, rouRot = 0;
 
     const paylines = [
-       [5,6,7,8,9], [0,1,2,3,4], [10,11,12,13,14], [0,6,12,8,4], [10,6,2,8,14], [0,1,7,13,14], [10,11,7,3,4], [5,1,2,3,9], [5,11,12,13,9], [0,6,7,8,14]
+        [5, 6, 7, 8, 9], [0, 1, 2, 3, 4], [10, 11, 12, 13, 14],
+        [0, 6, 12, 8, 4], [10, 6, 2, 8, 14], [0, 1, 7, 13, 14],
+        [10, 11, 7, 3, 4], [5, 1, 2, 3, 9], [5, 11, 12, 13, 9], [0, 6, 7, 8, 14]
     ];
-    const sideNums = [4,2,8,1,10,6,9,7,3,5];
-    const wheelNums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
-    const redNums = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+    const sideNums = [4, 2, 8, 1, 10, 6, 9, 7, 3, 5];
+    const wheelNums = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+    const redNums = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 
     const gameConfigs = {
         talisman: { symbols:[{char:'🐼', val:500},{char:'🏮', val:200},{char:'🪭', val:100}], scatter:'🧧', coin:'🪙' },
         book: { symbols:[{char:'🤠', val:500},{char:'👺', val:200},{char:'🪲', val:100}], scatter:'📖' },
         diamonds: { symbols:[{char:'💎', val:500},{char:'7️⃣', val:200},{char:'🔔', val:100}], scatter:'⭐' },
         space: { symbols:[{char:'👽', val:500},{char:'🚀', val:200},{char:'🪐', val:100}], scatter:'🛸' },
-        fruits: { symbols:[{char:'🍎', val:500},{char:'🍉', val:200},{char:'🍓', val:100}], scatter:'🎁' },
-        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'⚔️', val:200},{char:'⚓', val:100}], scatter:'🦜' },
-        neon: { symbols:[{char:'7️⃣', val:500},{char:'💎', val:200},{char:'🍀', val:100}], scatter:'🔥' }
+        fruits: { symbols:[{char:'🍎', val:500},{char:'🍒', val:200},{char:'🍋', val:100}], scatter:'🎁' },
+        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'⚓', val:200},{char:'⚔️', val:100}], scatter:'🦜' },
+        neon: { symbols:[{char:'7️⃣', val:500},{char:'🔔', val:200},{char:'🍀', val:100}], scatter:'🔥' }
     };
 
     function openGame(id) {
         document.getElementById('lobby').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
         const isRou = (id === 'roulette');
-        document.getElementById('rouette-ui') ? document.getElementById('rouette-ui').style.display = isRou ? 'flex' : 'none' : null;
         document.getElementById('roulette-ui').style.display = isRou ? 'flex' : 'none';
         document.getElementById('slot-ui-wrap').style.display = isRou ? 'none' : 'flex';
         document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
         if (!isRou) { currentGame = gameConfigs[id] || gameConfigs['book']; initGrid(); initLines(); }
-        else { currentGame = { type: 'roulette' }; }
+        else { currentGame = { type: 'roulette' }; rouBet = null; document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); }
         updateUI();
     }
 
@@ -236,10 +231,17 @@
     }
 
     function changeBet(v) { if (!isPlaying) { betIdx = Math.max(0, Math.min(bets.length - 1, betIdx + v)); updateUI(); } }
-    function setRouBet(t) { if (!isPlaying) { rouBet = t; document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); document.getElementById('r-'+t).classList.add('active'); } }
+    
+    function setRouBet(t, el) { 
+        if (isPlaying) return;
+        rouBet = t; 
+        document.querySelectorAll('.bet-opt').forEach(b => b.classList.remove('active')); 
+        el.classList.add('active'); 
+    }
 
     function handlePlay() {
         if (isPlaying || (balance < bets[betIdx] && freeSpins === 0)) return;
+        if (currentGame.type === 'roulette' && !rouBet) return alert("Выберите цвет!");
         isPlaying = true; document.getElementById('spin-btn').disabled = true; document.getElementById('win-tag').innerText = "";
         if (currentGame.type === 'roulette') spinRoulette(); else spinSlots();
     }
@@ -286,7 +288,7 @@
         setTimeout(() => {
             if (idx >= 3) { freeSpins = (idx===3?10:15); showModal("ТАЛИСМАН", freeSpins+" ФРИСПИНОВ!", () => { isPlaying = false; handlePlay(); }); }
             else { 
-                const p = [2,5,10,10,15];
+                const p = [2, 5, 10, 0, 0];
                 balance += p[idx]*bets[betIdx]; document.getElementById('win-tag').innerText = `+${(p[idx]*bets[betIdx]).toFixed(2)} BYN`;
                 finalize(); 
             }
