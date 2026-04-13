@@ -3,136 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Deluxe Fullscreen</title>
+    <title>Casino Pro: Talisman Wheel</title>
     <style>
-        :root {
-            --gold: #ffd700;
-            --bg: #0f021a;
-            --bonus: #ff00ff;
-            --cell-h: 22vh; /* Высота ячейки на ПК */
-        }
+        :root { --gold: #ffd700; --bg: #0f021a; --bonus: #ff00ff; --cell-h: 90px; }
+        @media (min-width: 1025px) { :root { --cell-h: 18vh; } }
+        @media (max-width: 1024px) { :root { --cell-h: 12vh; } }
+        @media (max-width: 480px) { :root { --cell-h: 60px; } }
 
-        @media (max-width: 1024px) { :root { --cell-h: 80px; } }
-        @media (max-width: 480px) { :root { --cell-h: 65px; } }
-
-        body, html {
-            height: 100%; margin: 0; padding: 0;
-            background-color: var(--bg); color: white;
-            font-family: 'Arial', sans-serif; overflow: hidden;
-        }
-
-        body { display: flex; flex-direction: column; }
-
-        header {
-            width: 100%; height: 60px; background: rgba(0,0,0,0.9);
-            display: flex; justify-content: center; align-items: center;
-            border-bottom: 2px solid var(--gold); z-index: 100;
-        }
+        body, html { height: 100%; margin: 0; padding: 0; background-color: var(--bg); color: white; font-family: sans-serif; overflow: hidden; display: flex; flex-direction: column; }
+        header { width: 100%; height: 60px; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; border-bottom: 2px solid var(--gold); z-index: 100; }
         .balance-box { font-size: 1.6rem; color: var(--gold); font-weight: bold; }
 
         /* МОДАЛКИ */
-        #modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: linear-gradient(135deg, #2b0347, #4a0e78); padding: 40px;
-            border-radius: 30px; border: 4px solid var(--gold); text-align: center;
-            width: 320px; box-shadow: 0 0 60px var(--bonus);
-        }
-        .modal-btn {
-            margin-top: 25px; padding: 15px 40px; background: var(--gold);
-            border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
-            font-size: 1.2rem; text-transform: uppercase;
-        }
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: linear-gradient(135deg, #2b0347, #4a0e78); padding: 35px; border-radius: 30px; border: 4px solid var(--gold); text-align: center; width: 320px; box-shadow: 0 0 60px var(--bonus); }
+        .modal-btn { margin-top: 20px; padding: 12px 30px; background: var(--gold); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; text-transform: uppercase; }
 
         /* ЛОББИ */
-        #lobby {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px; padding: 30px; width: 100%; max-width: 1200px;
-            margin: auto; box-sizing: border-box; overflow-y: auto;
-        }
-        .game-card {
-            height: 250px; border-radius: 20px; border: 3px solid #333; cursor: pointer;
-            display: flex; align-items: flex-end; overflow: hidden; background-size: cover;
-            background-position: center; position: relative; transition: 0.3s;
-        }
-        .game-card:hover { transform: translateY(-10px); border-color: var(--gold); }
-        .game-card h3 { background: rgba(0,0,0,0.8); width: 100%; text-align: center; margin: 0; padding: 15px; font-size: 1rem; }
+        #lobby { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; padding: 25px; width: 100%; max-width: 1200px; margin: auto; box-sizing: border-box; overflow-y: auto; }
+        .game-card { height: 220px; border-radius: 20px; border: 3px solid #333; cursor: pointer; display: flex; align-items: flex-end; overflow: hidden; background-size: cover; background-position: center; transition: 0.3s; position: relative; }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .game-card h3 { background: rgba(0,0,0,0.8); width: 100%; text-align: center; margin: 0; padding: 15px; font-size: 0.9rem; }
 
-        /* ИГРОВОЙ ЭКРАН */
-        #game-screen {
-            display: none; flex-direction: column; width: 100%; height: calc(100vh - 60px);
-            position: relative; align-items: center; justify-content: center;
-        }
+        #game-screen { display: none; flex-direction: column; width: 100%; height: calc(100vh - 60px); position: relative; align-items: center; justify-content: center; box-sizing: border-box; }
+        .back-btn { position: absolute; top: 10px; left: 10px; padding: 10px 15px; background: #333; border: none; color: white; border-radius: 8px; cursor: pointer; z-index: 10; }
 
-        .back-btn { position: absolute; top: 15px; left: 15px; padding: 10px 20px; background: #333; border: 1px solid #555; color: white; border-radius: 10px; cursor: pointer; z-index: 10; }
+        /* ИГРОВАЯ ОБЛАСТЬ */
+        .game-layout { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 1200px; }
+        @media (max-width: 1024px) { .game-layout { flex-direction: column; } }
 
-        /* МАШИНА */
-        .machine-wrap {
-            position: relative; width: 100%; max-width: 1100px;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 0 50px; box-sizing: border-box;
+        /* КОЛЕСО ТАЛИСМАНА */
+        #talisman-wheel-box { display: none; position: relative; width: 220px; height: 220px; flex-shrink: 0; }
+        @media (min-width: 1025px) { #talisman-wheel-box { width: 38vh; height: 38vh; } }
+        #talisman-wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--gold); 
+            background: conic-gradient(#d32f2f 0 72deg, #2e7d32 72deg 144deg, #1976d2 144deg 216deg, #ff9800 216deg 288deg, #ff00ff 288deg 360deg); 
+            transition: transform 3.5s cubic-bezier(0.1, 0, 0.1, 1);
+            position: relative; box-shadow: 0 0 40px black;
         }
+        .wheel-pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 35px solid var(--gold); z-index: 20; }
+        
+        /* Текст на колесе */
+        .sector-label { position: absolute; width: 100%; height: 100%; top: 0; left: 0; text-align: center; font-weight: 900; font-size: 1.2rem; color: white; text-shadow: 1px 1px 5px black; padding-top: 15px; box-sizing: border-box; pointer-events: none; }
 
-        /* ЦИФРЫ ЛИНИЙ - ТЕПЕРЬ ПРИВЯЗАНЫ К РЯДАМ ГРИДА */
-        .side-panel {
-            position: absolute; top: 0; height: calc(var(--cell-h) * 3 + 20px); /* Высота сетки */
-            display: flex; flex-direction: column; justify-content: space-around; width: 40px;
-        }
-        .left-panel { left: 5px; }
-        .right-panel { right: 5px; }
-        .lnum {
-            width: 30px; height: 24px; background: #111; font-size: 0.75rem;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 5px; border: 1px solid var(--gold); color: var(--gold); font-weight: bold;
-        }
-
-        .grid-container {
-            width: 100%; background: rgba(0,0,0,0.85); border: 4px solid var(--gold);
-            border-radius: 20px; padding: 10px; box-sizing: border-box; transition: 0.5s;
-        }
+        /* СЛОТЫ */
+        #slot-machine-ui { display: flex; align-items: center; gap: 5px; flex-grow: 1; max-width: 900px; }
+        .grid-container { flex-grow: 1; background: rgba(0,0,0,0.85); border: 4px solid var(--gold); border-radius: 20px; padding: 8px; }
         .bonus-active .grid-container { border-color: var(--bonus); box-shadow: 0 0 50px var(--bonus); }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; background: #000; border-radius: 12px; overflow: hidden; }
+        .cell { height: var(--cell-h); background: #1a1a1a; border: 1px solid #333; border-radius: 8px; position: relative; overflow: hidden; }
+        .reel-strip { position: absolute; width: 100%; display: flex; flex-direction: column; }
+        .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.55); }
+        .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 20px); width: 30px; }
+        .lnum { width: 24px; height: 20px; background: #111; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid var(--gold); color: var(--gold); }
 
-        .grid {
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 8px; background: #000; padding: 5px; border-radius: 12px; overflow: hidden;
-        }
+        /* РУЛЕТКА */
+        #roulette-ui { display: none; flex-direction: column; align-items: center; width: 100%; }
+        .rou-wheel-wrap { position: relative; width: 260px; height: 260px; border: 10px solid #333; border-radius: 50%; margin-bottom: 15px; }
+        #rou-wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.1, 0, 0.1, 1); background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg); }
+        .bet-opt { background: #222; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; border: 2px solid #444; }
+        .bet-opt.active { border-color: var(--gold); background: #444; }
 
-        .cell {
-            height: var(--cell-h); background: linear-gradient(#222, #111);
-            border: 1px solid #333; border-radius: 8px; position: relative; overflow: hidden;
-        }
+        /* ПАНЕЛЬ */
+        .controls { display: flex; justify-content: space-between; align-items: center; width: 95%; max-width: 900px; margin-top: 20px; gap: 10px; padding-bottom: 10px;}
+        @media (max-width: 600px) { .controls { flex-direction: column; } .bet-selector, .spin-btn { width: 100%; } }
+        .bet-selector { display: flex; align-items: center; gap: 12px; background: #000; padding: 10px 20px; border-radius: 15px; border: 2px solid var(--gold); }
+        .bet-btn { background: var(--gold); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.1rem; }
+        .spin-btn { flex-grow: 1; padding: 18px; background: linear-gradient(#44cc44, #1a881a); border: 2px solid #fff; color: white; font-size: 1.4rem; font-weight: 900; border-radius: 15px; cursor: pointer; text-transform: uppercase; }
+        .spin-btn:disabled { opacity: 0.4; }
 
-        .reel-strip { position: absolute; top: 0; left: 0; width: 100%; display: flex; flex-direction: column; }
-        .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.6); }
-
-        /* ПАНЕЛЬ УПРАВЛЕНИЯ */
-        .controls {
-            width: 100%; max-width: 1000px; display: flex; justify-content: space-between;
-            align-items: center; margin-top: 30px; padding: 0 20px; box-sizing: border-box;
-        }
-        @media (max-width: 600px) { .controls { flex-direction: column; gap: 15px; margin-top: 15px; } }
-
-        .bet-selector {
-            display: flex; align-items: center; gap: 15px; background: #000;
-            padding: 10px 25px; border-radius: 15px; border: 2px solid var(--gold);
-        }
-        .bet-btn { background: var(--gold); border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
-
-        .spin-btn {
-            padding: 18px 60px; background: linear-gradient(#44cc44, #1a881a);
-            border: 2px solid #fff; color: white; font-size: 1.5rem; font-weight: 900;
-            border-radius: 15px; cursor: pointer; text-transform: uppercase; transition: 0.1s;
-        }
-        .spin-btn:active { transform: translateY(3px); }
-        .spin-btn:disabled { opacity: 0.4; filter: grayscale(1); }
-
-        .win-active { animation: win-pulse 0.5s infinite alternate !important; border: 3px solid var(--gold) !important; background: rgba(255, 215, 0, 0.2) !important; z-index: 10; }
-        @keyframes win-pulse { from { transform: scale(1); } to { transform: scale(1.05); box-shadow: inset 0 0 20px var(--gold); } }
-
-        #status { margin-top: 15px; color: var(--gold); font-weight: bold; text-align: center; font-size: 1.5rem; min-height: 30px; text-shadow: 0 0 10px black; }
-        #bonus-info { display: none; color: var(--bonus); font-size: 1.5rem; font-weight: 900; text-align: center; text-shadow: 0 0 15px var(--bonus); margin-bottom: 10px; }
+        .win-active { animation: win-pulse 0.5s infinite alternate !important; border: 2px solid var(--gold) !important; background: rgba(255, 215, 0, 0.2) !important; z-index: 10; }
+        @keyframes win-pulse { from { transform: scale(1); } to { transform: scale(1.03); } }
+        #status { margin-top: 10px; color: var(--gold); font-weight: bold; text-align: center; font-size: 1.3rem; min-height: 24px;}
+        #bonus-info { display: none; color: var(--bonus); font-weight: bold; text-align: center; margin-bottom: 5px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -141,7 +84,7 @@
     <div class="modal-content">
         <h1 id="modal-title"></h1>
         <p id="modal-text"></p>
-        <button class="modal-btn" id="modal-btn">Продолжить</button>
+        <button class="modal-btn" id="modal-btn">ОК</button>
     </div>
 </div>
 
@@ -150,90 +93,89 @@
 </header>
 
 <div id="lobby">
-    <div class="game-card" style="background-image:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://freepik.com')" onclick="openGame('book')"><h3>Treasure Book 📖</h3></div>
-    <div class="game-card" style="background:#2b0347" onclick="openGame('diamonds')"><h3>Double Success 💎</h3></div>
-    <div class="game-card" style="background:#064e3b" onclick="openGame('pirate')"><h3>Pirate Luck 🏴‍☠️</h3></div>
-    <div class="game-card" style="background:#1e3a8a" onclick="openGame('fruits')"><h3>Fruit Blast 🍎</h3></div>
-    <div class="game-card" style="background:#1e1b4b" onclick="openGame('space')"><h3>Cosmic Stars 🚀</h3></div>
-    <div class="game-card" style="background:#7f1d1d" onclick="openGame('neon')"><h3>Neon 777 ⚡</h3></div>
+    <div class="game-card" style="background:#8b0000; border: 2px solid var(--gold);" onclick="openGame('talisman')"><h3>TALISMAN LUCK 🧧</h3></div>
+    <div class="game-card" style="background:#064e3b" onclick="openGame('roulette')"><h3>РУЛЕТКА 🎡</h3></div>
+    <div class="game-card" style="background-image:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://freepik.com')" onclick="openGame('book')"><h3>TREASURE BOOK 📖</h3></div>
+    <div class="game-card" style="background:#2b0347" onclick="openGame('diamonds')"><h3>DOUBLE SUCCESS 💎</h3></div>
+    <div class="game-card" style="background:#064e3b" onclick="openGame('pirate')"><h3>PIRATE LUCK 🏴‍☠️</h3></div>
+    <div class="game-card" style="background:#1e3a8a" onclick="openGame('fruits')"><h3>FRUIT BLAST 🍎</h3></div>
+    <div class="game-card" style="background:#7f1d1d" onclick="openGame('neon')"><h3>NEON 777 ⚡</h3></div>
 </div>
 
 <div id="game-screen">
-    <button class="back-btn" onclick="exitGame()">⬅ МЕНЮ</button>
-    <div id="bonus-info">БОНУС: <span id="fs-count">0</span> | ВЫИГРЫШ: <span id="fs-total-win">0.00</span></div>
+    <button class="back-btn" onclick="exitGame()">⬅ ЛОББИ</button>
+    <div id="bonus-info">БОНУСЫ: <span id="fs-count">0</span> | ВЫИГРЫШ: <span id="fs-total-win">0.00</span></div>
     
-    <div class="machine-wrap" id="machine-wrapper">
-        <div class="side-panel left-panel" id="l-nums"></div>
-        <div class="grid-container">
-            <div class="grid" id="slot-grid"></div>
+    <div class="game-layout">
+        <div id="talisman-wheel-box">
+            <div class="wheel-pointer"></div>
+            <div id="talisman-wheel">
+                <div class="sector-label" style="transform: rotate(36deg)">x2</div>
+                <div class="sector-label" style="transform: rotate(108deg)">x5</div>
+                <div class="sector-label" style="transform: rotate(180deg)">x10</div>
+                <div class="sector-label" style="transform: rotate(252deg)">10 FS</div>
+                <div class="sector-label" style="transform: rotate(324deg)">15 FS</div>
+            </div>
         </div>
-        <div class="side-panel right-panel" id="r-nums"></div>
+
+        <div id="slot-machine-ui">
+            <div class="side-panel" id="l-nums"></div>
+            <div class="grid-container"><div class="grid" id="slot-grid"></div></div>
+            <div class="side-panel" id="r-nums"></div>
+        </div>
+
+        <div id="roulette-ui">
+            <div class="rou-wheel-wrap"><div id="rou-wheel"></div><div class="wheel-pointer" style="top:-25px;"></div></div>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; width:300px;">
+                <div class="bet-opt" style="color:#ff4444" onclick="setRouBet('red', this)">КРАСНОЕ</div>
+                <div class="bet-opt" style="color:#aaa" onclick="setRouBet('black', this)">ЧЕРНОЕ</div>
+                <div class="bet-opt" style="grid-column: span 2; color:#44cc44" onclick="setRouBet('zero', this)">ЗЕРО (x36)</div>
+            </div>
+        </div>
     </div>
 
     <div class="controls">
         <div class="bet-selector">
-            <button class="bet-btn" onclick="changeBet(-1)">-</button>
-            <div style="text-align:center; min-width:70px; font-size:0.8rem;">СТАВКА<br><b id="display-bet">0.50</b></div>
-            <button class="bet-btn" onclick="changeBet(1)">+</button>
+            <button onclick="changeBet(-1)" class="bet-btn">-</button>
+            <div style="text-align:center; min-width:70px; font-size:0.75rem;">СТАВКА<br><b id="display-bet">0.50</b></div>
+            <button onclick="changeBet(1)" class="bet-btn">+</button>
         </div>
-        <button class="spin-btn" id="spin-btn" onclick="handleSpin()">ИГРАТЬ</button>
+        <button class="spin-btn" id="spin-btn" onclick="handlePlay()">ИГРАТЬ</button>
     </div>
     <div id="status"></div>
 </div>
 
 <script>
-    // --- ЗВУКИ ---
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-    function playSfx(f, t, d) {
-        try {
-            if (!audioCtx) audioCtx = new AudioCtx();
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.type = t; o.frequency.setValueAtTime(f, audioCtx.currentTime);
-            g.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + d);
-            o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
-        } catch(e){}
-    }
-    const playWin = () => { playSfx(880, 'sine', 0.2); setTimeout(()=>playSfx(1046, 'sine', 0.2), 100); };
-    const playBonus = () => [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playSfx(f, 'square', 0.3), i * 120));
-
-    // --- ПЕРЕМЕННЫЕ ---
     let balance = parseFloat(localStorage.getItem('casino_bal')) || 1000.00;
-    let bet = 0.50;
-    const bets = [0.10, 0.50, 1.00, 2.00, 5.00, 10.00, 50.00];
-    let betIdx = 1, isSpinning = false, freeSpins = 0, currentBonusWin = 0, currentGame = null;
+    let betIdx = 1;
+    const bets = [0.10, 0.50, 1.00, 5.00, 10.00, 50.00];
+    let isPlaying = false, freeSpins = 0, currentBonusWin = 0, currentGame = null, rouBet = null;
+    let talRot = 0, rouRot = 0;
 
     const gameConfigs = {
-        book: { title: "Treasure Book", symbols: [{char:'🤠', val: 500}, {char:'👺', val: 200}, {char:'🪲', val: 75}, {char:'🏺', val: 50}, {char:'A', val: 15}, {char:'K', val: 10}], scatter: '📖', color: '#784a0e' },
-        diamonds: { title: "Double Success", symbols: [{char:'💎', val: 300}, {char:'7️⃣', val: 150}, {char:'🔔', val: 100}, {char:'🍇', val: 50}, {char:'🍒', val: 20}], scatter: '⭐', color: '#2b0347' },
-        pirate: { title: "Pirate Luck", symbols: [{char:'🏴‍☠️', val: 400}, {char:'💰', val: 200}, {char:'⚔️', val: 100}, {char:'⚓', val: 50}, {char:'🗝️', val: 10}], scatter: '🦜', color: '#064e3b' },
-        fruits: { title: "Fruit Blast", symbols: [{char:'🍎', val: 200}, {char:'🍉', val: 100}, {char:'🍓', val: 50}, {char:'🍇', val: 20}, {char:'🍒', val: 5}], scatter: '🎁', color: '#1d4ed8' },
-        space: { title: "Cosmic Stars", symbols: [{char:'🛸', val: 500}, {char:'🚀', val: 200}, {char:'🪐', val: 100}, {char:'👽', val: 50}, {char:'☄️', val: 10}], scatter: '🌌', color: '#1e1b4b' },
-        neon: { title: "Neon 777", symbols: [{char:'7️⃣', val: 500}, {char:'💎', val: 200}, {char:'🔔', val: 100}, {char:'🍀', val: 50}, {char:'🍒', val: 10}], scatter: '🔥', color: '#7f1d1d' }
+        talisman: { title: "Talisman Luck", type: "slot", symbols: [{char:'🐼', val: 500}, {char:'🏮', val: 200}, {char:'🪭', val: 100}], scatter: '🧧', coin: '🪙', color: '#8b0000' },
+        roulette: { title: "Roulette Royal", type: "roulette", color: "#064e3b" },
+        book: { type: "slot", symbols: [{char:'🤠', val: 500}, {char:'👺', val: 300}, {char:'🪲', val: 150}], scatter: '📖', color: '#784a0e' },
+        diamonds: { type: "slot", symbols: [{char:'💎', val: 400}, {char:'7️⃣', val: 200}], scatter: '⭐', color: '#2b0347' },
+        pirate: { type: "slot", symbols: [{char:'🏴‍☠️', val: 400}, {char:'💰', val: 200}], scatter: '🦜', color: '#064e3b' },
+        fruits: { type: "slot", symbols: [{char:'🍎', val: 300}, {char:'🍉', val: 150}], scatter: '🎁', color: '#1d4ed8' },
+        neon: { type: "slot", symbols: [{char:'7️⃣', val: 500}, {char:'💎', val: 200}], scatter: '🔥', color: '#7f1d1d' }
     };
 
-    const paylines = [
-        [5,6,7,8,9], [0,1,2,3,4], [10,11,12,13,14], // Ряды
-        [0,6,12,8,4], [10,6,2,6,10], // Зигзаги
-        [0,1,7,13,14], [10,11,7,3,4], // Ступеньки
-        [5,1,2,3,9], [5,11,12,13,9], [0,6,7,8,4] // Углы
-    ];
+    const paylines = [[5,6,7,8,9],[0,1,2,3,4],[10,11,12,13,14],[0,6,12,8,4],[10,6,2,6,10],[5,1,2,3,9],[5,11,12,13,9],[0,1,7,13,14],[10,11,7,1,2],[5,6,2,8,9]];
+    const wheelNums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+    const redNums = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
     function openGame(id) {
         currentGame = gameConfigs[id];
         document.getElementById('lobby').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
         document.body.style.background = `radial-gradient(circle, ${currentGame.color} 0%, #000 100%)`;
-        initGrid(); initInterface(); updateUI();
-    }
-
-    function initInterface() {
-        const nums = [4, 2, 8, 1, 10, 6, 9, 7, 3, 5];
-        document.getElementById('l-nums').innerHTML = document.getElementById('r-nums').innerHTML = 
-            nums.map(n => `<div class="lnum">${n}</div>`).join('');
+        document.getElementById('slot-machine-ui').style.display = currentGame.type === 'slot' ? 'flex' : 'none';
+        document.getElementById('roulette-ui').style.display = currentGame.type === 'roulette' ? 'flex' : 'none';
+        document.getElementById('talisman-wheel-box').style.display = id === 'talisman' ? 'block' : 'none';
+        if (currentGame.type === 'slot') { initGrid(); initLines(); }
+        updateUI();
     }
 
     function initGrid() {
@@ -241,115 +183,133 @@
         for (let i = 0; i < 15; i++) g.innerHTML += `<div class="cell"><div class="reel-strip" id="s-${i}"><div class="symbol">?</div></div></div>`;
     }
 
-    function changeBet(v) {
-        if (isSpinning || freeSpins > 0) return;
-        betIdx = Math.max(0, Math.min(bets.length - 1, betIdx + v));
-        bet = bets[betIdx]; document.getElementById('display-bet').innerText = bet.toFixed(2);
+    function initLines() {
+        const nums = [4,2,8,1,10,6,9,7,3,5];
+        document.getElementById('l-nums').innerHTML = document.getElementById('r-nums').innerHTML = nums.map(n => `<div class="lnum">${n}</div>`).join('');
     }
 
-    function handleSpin() {
-        if (isSpinning || (balance < bet && freeSpins === 0)) return;
-        isSpinning = true;
-        if (freeSpins > 0) freeSpins--;
-        else { balance -= bet; localStorage.setItem('casino_bal', balance); }
-        updateUI();
-        document.getElementById('spin-btn').disabled = true;
-        document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-active'));
+    function changeBet(v) { if (!isPlaying) { betIdx = Math.max(0, Math.min(bets.length - 1, betIdx + v)); updateUI(); } }
+    function setRouBet(t, el) { if (!isPlaying) { document.querySelectorAll('.bet-opt').forEach(b => b.classList.remove('active')); el.classList.add('active'); rouBet = t; } }
 
-        const res = [];
-        const cellH = document.querySelector('.cell').offsetHeight;
-        const stripCount = 30;
+    function handlePlay() {
+        if (isPlaying || (balance < bets[betIdx] && freeSpins === 0)) return;
+        if (currentGame.type === 'roulette' && !rouBet) return alert("Сделайте ставку!");
+        isPlaying = true; document.getElementById('spin-btn').disabled = true;
+        document.getElementById('status').innerText = "";
+        if (currentGame.type === 'slot') spinSlots(); else spinRoulette();
+    }
 
+    function spinSlots() {
+        const isBonus = freeSpins > 0;
+        if (isBonus) freeSpins--; else { balance -= bets[betIdx]; localStorage.setItem('casino_bal', balance); }
+        updateUI(); document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-active'));
+        const res = []; const cellH = document.querySelector('.cell').offsetHeight;
         for (let i = 0; i < 15; i++) {
             const strip = document.getElementById(`s-${i}`);
-            const isScatter = Math.random() > 0.985;
-            const sym = isScatter ? currentGame.scatter : currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char;
+            let sym; const r = Math.random();
+            if (r > 0.982) sym = currentGame.scatter;
+            else if (r > 0.95 && currentGame.coin) sym = currentGame.coin;
+            else sym = currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char;
             res[i] = sym;
-
-            let html = '';
-            for (let j = 0; j < stripCount; j++) {
-                const s = currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char;
-                html += `<div class="symbol">${j===0 ? sym : s}</div>`;
-            }
-            strip.innerHTML = html;
-            strip.style.transition = 'none';
-            strip.style.transform = `translateY(-${(stripCount-1) * cellH}px)`;
-
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    strip.style.transition = `transform ${1.4 + (i%5)*0.2}s cubic-bezier(0.15, 0, 0.1, 1)`;
-                    strip.style.transform = 'translateY(0px)';
-                }, 50);
-            });
+            let h = ''; for (let j = 0; j < 30; j++) h += `<div class="symbol">${j===0?sym:currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char}</div>`;
+            strip.innerHTML = h; strip.style.transition = 'none'; strip.style.transform = `translateY(-${29 * cellH}px)`;
+            requestAnimationFrame(() => { setTimeout(() => { strip.style.transition = `transform ${1.4+(i%5)*0.15}s cubic-bezier(0.1, 0.9, 0.2, 1)`; strip.style.transform = 'translateY(0px)'; }, 50); });
         }
-        setTimeout(() => checkWins(res), 2800);
+        setTimeout(() => checkSlotWins(res, isBonus), 2800);
     }
 
-    function checkWins(res) {
-        let winTotal = 0;
-        const scatters = res.filter(s => s === currentGame.scatter).length;
+    function checkSlotWins(res, isBonus) {
+        let win = 0; const scatters = res.filter(s => s === currentGame.scatter).length;
+        const coins = res.filter(s => s === currentGame.coin).length;
         paylines.forEach(line => {
             let match = 1, first = res[line[0]];
-            if (first === currentGame.scatter) return;
+            if (first === currentGame.scatter || first === currentGame.coin) return;
             for (let i = 1; i < 5; i++) { if (res[line[i]] === first) match++; else break; }
             if (match >= 3) {
                 const data = currentGame.symbols.find(s => s.char === first);
-                let mult = match === 3 ? 1 : (match === 4 ? 5 : 20);
-                winTotal += (data.val / 10) * mult * bet;
+                let mult = match === 3 ? (isBonus ? 8 : 1) : (match === 4 ? (isBonus ? 25 : 3) : (isBonus ? 150 : 10));
+                win += (data ? data.val / 10 : 1) * mult * bets[betIdx];
                 for (let i = 0; i < match; i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
             }
         });
+        
+        if (isBonus || (scatters >= 3 && freeSpins === 0)) currentBonusWin += win; else balance += win;
+        if (win > 0) document.getElementById('status').innerText = `WIN: ${win.toFixed(2)}`;
 
-        if (winTotal > 0) {
-            playWin();
-            if (freeSpins > 0 || (scatters >= 3 && freeSpins === 0)) currentBonusWin += winTotal;
-            else { balance += winTotal; localStorage.setItem('casino_bal', balance); }
-            document.getElementById('status').innerText = `WIN: ${winTotal.toFixed(2)} BYN`;
+        // ТАЛИСМАН (МОНЕТКА)
+        if (coins > 0 && Math.random() > 0.5 && !isBonus) {
+            document.getElementById('status').innerText = "ТАЛИСМАН УДАЧИ! 🪙";
+            setTimeout(spinTalismanWheel, 1000);
+            return;
         }
 
-        if (scatters >= 3 && freeSpins === 0) {
-            isSpinning = false; playBonus();
-            showModal("ПОЗДРАВЛЯЕМ!", "Вы получили 10 БОНУСНЫХ ИГР!", "Играть", () => {
-                freeSpins = 10; currentBonusWin = 0;
-                document.getElementById('machine-wrapper').parentElement.classList.add('bonus-active');
-                updateUI(); handleSpin();
-            }); return;
+        if (scatters >= 3 && !isBonus) {
+            showModal("БОНУС!", "10 БЕСПЛАТНЫХ ИГР!", "ИГРАТЬ", () => { freeSpins = 10; currentBonusWin = 0; document.getElementById('slot-machine-ui').classList.add('bonus-active'); isPlaying = false; handlePlay(); });
+        } else if (freeSpins > 0) {
+            setTimeout(spinSlots, 1200);
+        } else {
+            finishGameCycle();
         }
+        localStorage.setItem('casino_bal', balance); updateUI();
+    }
 
-        isSpinning = false; updateUI();
-        if (freeSpins > 0) setTimeout(handleSpin, 1200);
-        else if (document.getElementById('machine-wrapper').parentElement.classList.contains('bonus-active')) {
-            showModal("ИТОГ БОНУСА", `Вы выиграли: ${currentBonusWin.toFixed(2)} BYN`, "ЗАБРАТЬ", () => {
-                balance += currentBonusWin; localStorage.setItem('casino_bal', balance);
-                currentBonusWin = 0; document.getElementById('machine-wrapper').parentElement.classList.remove('bonus-active');
-                document.getElementById('spin-btn').disabled = false; updateUI();
+    function spinTalismanWheel() {
+        const wheel = document.getElementById('talisman-wheel');
+        const sectorIdx = Math.floor(Math.random() * 5); // 0:x2, 1:x5, 2:x10, 3:10FS, 4:15FS
+        // 360/5 = 72 градуса на сектор. Мы крутим против часовой, чтобы сектор попал под указатель сверху.
+        // Индексы: 0(x2), 1(x5), 2(x10), 3(10FS), 4(15FS)
+        const targetRotation = 360 - (sectorIdx * 72);
+        talRot += (360 * 5) + targetRotation - (talRot % 360);
+        wheel.style.transform = `rotate(${talRot}deg)`;
+        
+        setTimeout(() => {
+            if (sectorIdx === 3 || sectorIdx === 4) {
+                const fs = sectorIdx === 3 ? 10 : 15;
+                showModal("ТАЛИСМАН", `ВЫ ВЫИГРАЛИ ${fs} ФРИСПИНОВ!`, "ИГРАТЬ", () => { freeSpins = fs; currentBonusWin = 0; document.getElementById('slot-machine-ui').classList.add('bonus-active'); isPlaying = false; handlePlay(); });
+            } else {
+                const mults = [2, 5, 10];
+                const prize = mults[sectorIdx] * bets[betIdx];
+                balance += prize;
+                document.getElementById('status').innerText = `ТАЛИСМАН: +${prize.toFixed(2)} BYN!`;
+                finishGameCycle();
+            }
+            updateUI();
+        }, 3600);
+    }
+
+    function spinRoulette() {
+        balance -= bets[betIdx]; localStorage.setItem('casino_bal', balance); updateUI();
+        const wheel = document.getElementById('rou-wheel');
+        const targetIdx = Math.floor(Math.random()*37);
+        rouRot += (360 * 5) + ((360/37) * targetIdx);
+        wheel.style.transform = `rotate(-${rouRot}deg)`;
+        setTimeout(() => {
+            const num = wheelNums[targetIdx];
+            let win = 0; const isRed = redNums.includes(num);
+            if (rouBet === 'red' && isRed && num !== 0) win = bets[betIdx] * 2;
+            else if (rouBet === 'black' && !isRed && num !== 0) win = bets[betIdx] * 2;
+            else if (rouBet === 'zero' && num === 0) win = bets[betIdx] * 36;
+            balance += win; document.getElementById('status').innerText = win > 0 ? `ВЫИГРАЛО: ${num} (+${win.toFixed(2)})` : `ВЫПАЛО: ${num}`;
+            finishGameCycle();
+            localStorage.setItem('casino_bal', balance); updateUI();
+        }, 4100);
+    }
+
+    function finishGameCycle() {
+        isPlaying = false;
+        document.getElementById('spin-btn').disabled = false;
+        if (freeSpins === 0 && document.getElementById('slot-machine-ui').classList.contains('bonus-active')) {
+            showModal("БОНУС ЗАВЕРШЕН", `Вы выиграли: ${currentBonusWin.toFixed(2)} BYN`, "ЗАБРАТЬ", () => {
+                balance += currentBonusWin; currentBonusWin = 0;
+                document.getElementById('slot-machine-ui').classList.remove('bonus-active');
+                updateUI();
             });
-        } else document.getElementById('spin-btn').disabled = false;
+        }
     }
 
-    function showModal(t, txt, bt, cb) {
-        document.getElementById('modal-title').innerText = t;
-        document.getElementById('modal-text').innerText = txt;
-        const b = document.getElementById('modal-btn'); b.innerText = bt;
-        b.onclick = () => { document.getElementById('modal-overlay').style.display = 'none'; cb(); };
-        document.getElementById('modal-overlay').style.display = 'flex';
-    }
-
-    function updateUI() {
-        document.getElementById('balance').innerText = balance.toFixed(2);
-        const info = document.getElementById('bonus-info');
-        if (freeSpins > 0 || (isSpinning && document.getElementById('machine-wrapper').parentElement.classList.contains('bonus-active'))) {
-            info.style.display = 'block'; document.getElementById('fs-count').innerText = freeSpins;
-            document.getElementById('fs-total-win').innerText = currentBonusWin.toFixed(2);
-        } else info.style.display = 'none';
-    }
-
-    function exitGame() {
-        if (isSpinning || freeSpins > 0) return;
-        document.getElementById('lobby').style.display = 'grid';
-        document.getElementById('game-screen').style.display = 'none';
-        document.body.style.background = '#0f021a';
-    }
+    function showModal(t, m, b, cb) { document.getElementById('modal-title').innerText = t; document.getElementById('modal-text').innerText = m; document.getElementById('modal-btn').onclick = () => { document.getElementById('modal-overlay').style.display = 'none'; cb(); }; document.getElementById('modal-overlay').style.display = 'flex'; }
+    function updateUI() { document.getElementById('balance').innerText = balance.toFixed(2); document.getElementById('display-bet').innerText = bets[betIdx].toFixed(2); const info = document.getElementById('bonus-info'); if (freeSpins > 0 || (isPlaying && document.getElementById('slot-machine-ui').classList.contains('bonus-active'))) { info.style.display = 'block'; document.getElementById('fs-count').innerText = freeSpins; document.getElementById('fs-total-win').innerText = currentBonusWin.toFixed(2); } else info.style.display = 'none'; }
+    function exitGame() { if (isPlaying || freeSpins > 0) return; document.getElementById('lobby').style.display = 'grid'; document.getElementById('game-screen').style.display = 'none'; }
     updateUI();
 </script>
 </body>
