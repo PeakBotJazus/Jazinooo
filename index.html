@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Casino Royal: Mobile Fit</title>
+    <title>Casino Royal: Rounded Edition</title>
     <style>
         :root {
             --gold: #ffd700;
             --bg-grad: radial-gradient(circle, #3d2b01 0%, #000000 100%);
             --win-green: #2ecc71;
             --cell-h: 20vh;
+            --radius: 15px; /* Новый радиус для ячеек */
         }
 
-        /* Адаптация высоты под мобильные устройства */
         @media (max-width: 1024px) { :root { --cell-h: 12vh; } }
         @media (max-width: 480px) { :root { --cell-h: 11vh; } }
 
@@ -36,7 +36,7 @@
         @media (max-width: 480px) { #lobby { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; } }
 
         .game-card {
-            height: 180px; border-radius: 12px; border: 2px solid #543d01;
+            height: 180px; border-radius: var(--radius); border: 2px solid #543d01;
             cursor: pointer; display: flex; align-items: flex-end;
             overflow: hidden; background-size: cover; background-position: center; transition: 0.2s;
         }
@@ -63,50 +63,58 @@
         .sector-text { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; color: white; padding-top: 8px; font-size: 0.6rem; pointer-events: none; }
         @media (min-width: 1025px) { .sector-text { font-size: 1.2rem; padding-top: 25px; } }
 
-        /* СЛОТЫ */
-        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; max-width: 800px; min-height: 0; }
-        .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 15px); width: 22px; }
-        .lnum { width: 20px; height: 16px; background: #000; border: 1px solid var(--gold); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: var(--gold); font-weight: bold; }
+        /* СЛОТЫ: ИСПРАВЛЕННЫЕ ЗАКРУГЛЕННЫЕ ЯЧЕЙКИ */
+        .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; max-width: 850px; min-height: 0; }
+        .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 15px); width: 24px; }
+        .lnum { width: 22px; height: 18px; background: #000; border: 1px solid var(--gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: var(--gold); font-weight: bold; }
         
-        .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 15px; padding: 6px; flex-grow: 1; min-height: 0; display: flex; }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; border-radius: 10px; overflow: hidden; width: 100%; }
-        .cell { height: var(--cell-h); background: #111; position: relative; overflow: hidden; border: 1px solid #222; }
+        .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 20px; padding: 10px; flex-grow: 1; min-height: 0; display: flex; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; }
+        
+        .cell { 
+            height: var(--cell-h); 
+            background: #151515; 
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid #2a2a2a; 
+            border-radius: var(--radius); /* Крупное скругление */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8); /* Тень для глубины */
+        }
         .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.6); }
         .reel-strip { position: absolute; width: 100%; display: flex; flex-direction: column; }
 
         /* УПРАВЛЕНИЕ (КАПСУЛЫ) */
-        .controls-panel { width: 100%; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; padding-top: 5px; }
-        .controls { display: flex; align-items: center; justify-content: center; gap: 10px; width: 95%; max-width: 600px; }
+        .controls-panel { width: 100%; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+        .controls { display: flex; align-items: center; justify-content: center; gap: 10px; width: 95%; max-width: 600px; padding-bottom: 5px; }
         
         .bet-capsule {
             display: flex; align-items: center; justify-content: space-between;
             background: #000; border: 2.5px solid var(--gold); border-radius: 40px;
-            padding: 4px 15px; width: 150px; flex-shrink: 0;
+            padding: 4px 15px; width: 155px; flex-shrink: 0;
         }
-        .bet-btn { background: var(--gold); border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: 900; cursor: pointer; color: black; font-size: 1.2rem; }
+        .bet-btn { background: var(--gold); border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: 900; cursor: pointer; color: black; font-size: 1.2rem; }
         .bet-info { text-align: center; font-size: 0.55rem; color: #fff; text-transform: uppercase; }
-        .bet-info b { display: block; font-size: 0.85rem; }
+        .bet-info b { display: block; font-size: 0.9rem; }
 
         .spin-btn {
-            flex-grow: 1; padding: 15px; border-radius: 40px; border: 2px solid #fff;
+            flex-grow: 1; padding: 18px; border-radius: 40px; border: 2px solid #fff;
             background: linear-gradient(to bottom, #44cc44, #1a881a);
-            color: white; font-size: 1.4rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
+            color: white; font-size: 1.5rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
         }
         .spin-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        #win-tag { color: var(--gold); font-weight: 900; font-size: 1.2rem; text-transform: uppercase; min-height: 20px; text-align: center; }
+        #win-tag { color: var(--gold); font-weight: 900; font-size: 1.3rem; text-transform: uppercase; min-height: 25px; text-align: center; }
 
         /* РУЛЕТКА */
         #roulette-ui { display: none; flex-direction: column; align-items: center; min-height: 0; }
         #rou-wheel { width: 220px; height: 220px; border-radius: 50%; border: 6px solid #333; margin-bottom: 10px; transition: 4s ease-out; }
         @media (min-width: 1025px) { #rou-wheel { width: 300px; height: 300px; } }
-        .bet-opt { background: #111; padding: 10px; border-radius: 10px; text-align: center; border: 1.5px solid #444; font-size: 0.75rem; cursor: pointer; }
-        .bet-opt.active { border-color: var(--gold); }
 
         /* МОДАЛКА */
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; }
-        .modal-content { background: #111; padding: 25px; border-radius: 20px; border: 3px solid var(--gold); text-align: center; width: 85%; max-width: 320px; }
-        .win-active { border: 2px solid var(--gold) !important; background: rgba(255, 215, 0, 0.25) !important; animation: flash 0.5s infinite alternate; }
+        .modal-content { background: #111; padding: 25px; border-radius: 20px; border: 3px solid var(--gold); text-align: center; width: 85%; max-width: 350px; }
+        
+        .win-active { border: 2.5px solid var(--gold) !important; background: rgba(255, 215, 0, 0.25) !important; animation: flash 0.5s infinite alternate; z-index: 10; }
         @keyframes flash { from { opacity: 1; } to { opacity: 0.6; } }
     </style>
 </head>
@@ -116,7 +124,7 @@
     <div class="modal-content">
         <h2 id="modal-title" style="color:var(--gold); margin-top:0;">БОНУС!</h2>
         <p id="modal-text"></p>
-        <button onclick="closeModal()" style="margin-top:15px; padding:10px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button>
+        <button onclick="closeModal()" style="margin-top:20px; padding:12px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button>
     </div>
 </div>
 
@@ -157,9 +165,9 @@
         <div id="roulette-ui">
             <div style="position:relative;">
                 <div class="wheel-ptr" style="top:-15px;"></div>
-                <div id="rou-wheel"></div>
+                <div id="rou-wheel" style="background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg);"></div>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:6px; width:260px; margin-top:10px;">
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; width:260px; margin-top:10px;">
                 <div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red')">КРАСНОЕ</div>
                 <div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black')">ЧЕРНОЕ</div>
                 <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero')">ЗЕРО (x36)</div>
@@ -172,7 +180,7 @@
         <div class="controls">
             <div class="bet-capsule">
                 <button onclick="changeBet(-1)" class="bet-btn">-</button>
-                <div class="bet-info">СТАВКА <b id="display-bet">0.50</b></div>
+                <div class="bet-info">СТАВКА <b id="display-bet">50.00</b></div>
                 <button onclick="changeBet(1)" class="bet-btn">+</button>
             </div>
             <button class="spin-btn" id="spin-btn" onclick="handlePlay()">ИГРАТЬ</button>
@@ -182,13 +190,15 @@
 
 <script>
     let balance = parseFloat(localStorage.getItem('casino_bal')) || 1000.00;
-    let betIdx = 1;
+    let betIdx = 4;
     const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00];
     let isPlaying = false, currentGame = null, rouBet = null, freeSpins = 0;
     let talRot = 0, rouRot = 0;
 
+    const paylines = [
+       [5,6,7,8,9], [0,1,2,3,4], [10,11,12,13,14], [0,6,12,8,4], [10,6,2,8,14], [0,1,7,13,14], [10,11,7,3,4], [5,1,2,3,9], [5,11,12,13,9], [0,6,7,8,14]
+    ];
     const sideNums = [4,2,8,1,10,6,9,7,3,5];
-    const paylines = [[5,6,7,8,9],[0,1,2,3,4],[10,11,12,13,14],[0,6,12,8,4],[10,6,2,8,14],[0,1,7,13,14],[10,11,7,3,4],[5,1,2,3,9],[5,11,12,13,9],[0,6,7,8,4]];
     const wheelNums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
     const redNums = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
@@ -197,25 +207,21 @@
         book: { symbols:[{char:'🤠', val:500},{char:'👺', val:200},{char:'🪲', val:100}], scatter:'📖' },
         diamonds: { symbols:[{char:'💎', val:500},{char:'7️⃣', val:200},{char:'🔔', val:100}], scatter:'⭐' },
         space: { symbols:[{char:'👽', val:500},{char:'🚀', val:200},{char:'🪐', val:100}], scatter:'🛸' },
-        fruits: { symbols:[{char:'🍎', val:500},{char:'🍉', val:200},{char:'🍒', val:100}], scatter:'🎁' },
-        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'💰', val:200},{char:'⚔️', val:100}], scatter:'🦜' },
-        neon: { symbols:[{char:'7️⃣', val:500},{char:'🔔', val:200},{char:'🍀', val:100}], scatter:'🔥' }
+        fruits: { symbols:[{char:'🍎', val:500},{char:'🍉', val:200},{char:'🍓', val:100}], scatter:'🎁' },
+        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'⚔️', val:200},{char:'⚓', val:100}], scatter:'🦜' },
+        neon: { symbols:[{char:'7️⃣', val:500},{char:'💎', val:200},{char:'🍀', val:100}], scatter:'🔥' }
     };
 
     function openGame(id) {
         document.getElementById('lobby').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
         const isRou = (id === 'roulette');
+        document.getElementById('rouette-ui') ? document.getElementById('rouette-ui').style.display = isRou ? 'flex' : 'none' : null;
         document.getElementById('roulette-ui').style.display = isRou ? 'flex' : 'none';
         document.getElementById('slot-ui-wrap').style.display = isRou ? 'none' : 'flex';
         document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
-        if (isRou) {
-            currentGame = { type: 'roulette' };
-            document.getElementById('rou-wheel').style.background = "conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg)";
-        } else {
-            currentGame = gameConfigs[id] || gameConfigs['book'];
-            initGrid(); initLines();
-        }
+        if (!isRou) { currentGame = gameConfigs[id] || gameConfigs['book']; initGrid(); initLines(); }
+        else { currentGame = { type: 'roulette' }; }
         updateUI();
     }
 
@@ -235,7 +241,7 @@
     function handlePlay() {
         if (isPlaying || (balance < bets[betIdx] && freeSpins === 0)) return;
         isPlaying = true; document.getElementById('spin-btn').disabled = true; document.getElementById('win-tag').innerText = "";
-        if (document.getElementById('roulette-ui').style.display === 'flex') spinRoulette(); else spinSlots();
+        if (currentGame.type === 'roulette') spinRoulette(); else spinSlots();
     }
 
     function spinSlots() {
@@ -244,11 +250,11 @@
         const res = []; const cellH = document.querySelector('.cell').offsetHeight;
         for (let i = 0; i < 15; i++) {
             const strip = document.getElementById(`s-${i}`);
-            let sym = (Math.random() > 0.982) ? currentGame.scatter : (Math.random() > 0.95 && currentGame.coin ? currentGame.coin : currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char);
+            let sym = (Math.random() > 0.985) ? currentGame.scatter : (Math.random() > 0.95 && currentGame.coin ? currentGame.coin : currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char);
             res[i] = sym;
             let h = ''; for (let j = 0; j < 30; j++) h += `<div class="symbol">${j===0?sym:currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char}</div>`;
             strip.innerHTML = h; strip.style.transition = 'none'; strip.style.transform = `translateY(-${29 * cellH}px)`;
-            setTimeout(() => { strip.style.transition = `transform ${1.3+(i%5)*0.1}s cubic-bezier(0.1, 0.9, 0.2, 1)`; strip.style.transform = 'translateY(0px)'; }, 50);
+            setTimeout(() => { strip.style.transition = `transform ${1.3+(i%5)*0.12}s cubic-bezier(0.1, 0.9, 0.2, 1)`; strip.style.transform = 'translateY(0px)'; }, 50);
         }
         setTimeout(() => checkWins(res), 2800);
     }
@@ -260,7 +266,8 @@
             if (first === currentGame.scatter || first === currentGame.coin) return;
             for (let i = 1; i < 5; i++) { if (res[line[i]] === first) match++; else break; }
             if (match >= 3) {
-                win += (match === 3 ? 1 : match === 4 ? 5 : 20) * bets[betIdx];
+                const data = currentGame.symbols.find(s => s.char === first) || {val: 100};
+                win += (data.val / 10) * (match === 3 ? 1 : match === 4 ? 5 : 20) * bets[betIdx];
                 for (let i = 0; i < match; i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
             }
         });
@@ -279,7 +286,7 @@
         setTimeout(() => {
             if (idx >= 3) { freeSpins = (idx===3?10:15); showModal("ТАЛИСМАН", freeSpins+" ФРИСПИНОВ!", () => { isPlaying = false; handlePlay(); }); }
             else { 
-                const p = [2, 5, 10, 0, 0];
+                const p = [2,5,10,10,15];
                 balance += p[idx]*bets[betIdx]; document.getElementById('win-tag').innerText = `+${(p[idx]*bets[betIdx]).toFixed(2)} BYN`;
                 finalize(); 
             }
