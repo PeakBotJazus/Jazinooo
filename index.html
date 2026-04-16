@@ -185,9 +185,10 @@
 <script>
     let balance = parseFloat(localStorage.getItem('casino_bal')) || 1000.00;
     let betIdx = 4;
-    const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00];
+    const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00, 1000, 10000, 100000 ];
     let isPlaying = false, currentGame = null, rouBet = null, freeSpins = 0;
     let talRot = 0, rouRot = 0;
+    let pendingTalisman = false;
 
     const paylines = [
         [5, 6, 7, 8, 9], [0, 1, 2, 3, 4], [10, 11, 12, 13, 14],
@@ -198,25 +199,35 @@
     const wheelNums = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
     const redNums = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
 
+    // СИЛЬНО УМЕНЬШЕННЫЕ ВЫИГРЫШИ И РЕДКИЕ БОНУСЫ
     const gameConfigs = {
-        talisman: { symbols:[{char:'🐼', val:500},{char:'🏮', val:200},{char:'🪭', val:100}], scatter:'🧧', coin:'🪙' },
-        book: { symbols:[{char:'🤠', val:500},{char:'👺', val:200},{char:'🪲', val:100}], scatter:'📖' },
-        diamonds: { symbols:[{char:'💎', val:500},{char:'7️⃣', val:200},{char:'🔔', val:100}], scatter:'⭐' },
-        space: { symbols:[{char:'👽', val:500},{char:'🚀', val:200},{char:'🪐', val:100}], scatter:'🛸' },
-        fruits: { symbols:[{char:'🍎', val:500},{char:'🍒', val:200},{char:'🍋', val:100}], scatter:'🎁' },
-        pirate: { symbols:[{char:'🏴‍☠️', val:500},{char:'⚓', val:200},{char:'⚔️', val:100}], scatter:'🦜' },
-        neon: { symbols:[{char:'7️⃣', val:500},{char:'🔔', val:200},{char:'🍀', val:100}], scatter:'🔥' }
+        talisman: { symbols:[{char:'🐼', val:80},{char:'🏮', val:30},{char:'🪭', val:15}], scatter:'🧧', coin:'🪙' },
+        book: { symbols:[{char:'🤠', val:80},{char:'👺', val:30},{char:'🪲', val:15}], scatter:'📖' },
+        diamonds: { symbols:[{char:'💎', val:80},{char:'7️⃣', val:30},{char:'🔔', val:15}], scatter:'⭐' },
+        space: { symbols:[{char:'👽', val:80},{char:'🚀', val:30},{char:'🪐', val:15}], scatter:'🛸' },
+        fruits: { symbols:[{char:'🍎', val:80},{char:'🍒', val:30},{char:'🍋', val:15}], scatter:'🎁' },
+        pirate: { symbols:[{char:'🏴‍☠️', val:80},{char:'⚓', val:30},{char:'⚔️', val:15}], scatter:'🦜' },
+        neon: { symbols:[{char:'7️⃣', val:80},{char:'🔔', val:30},{char:'🍀', val:15}], scatter:'🔥' }
     };
 
     function openGame(id) {
+        if (isPlaying) return;
         document.getElementById('lobby').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
         const isRou = (id === 'roulette');
         document.getElementById('roulette-ui').style.display = isRou ? 'flex' : 'none';
         document.getElementById('slot-ui-wrap').style.display = isRou ? 'none' : 'flex';
         document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
-        if (!isRou) { currentGame = gameConfigs[id] || gameConfigs['book']; initGrid(); initLines(); }
-        else { currentGame = { type: 'roulette' }; rouBet = null; document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); }
+        if (!isRou) { 
+            currentGame = gameConfigs[id] || gameConfigs['book']; 
+            currentGame.isTalisman = (id === 'talisman');
+            initGrid(); 
+            initLines(); 
+        } else { 
+            currentGame = { type: 'roulette' }; 
+            rouBet = null; 
+            document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); 
+        }
         updateUI();
     }
 
@@ -240,23 +251,60 @@
     }
 
     function handlePlay() {
-        if (isPlaying || (balance < bets[betIdx] && freeSpins === 0)) return;
-        if (currentGame.type === 'roulette' && !rouBet) return alert("Выберите цвет!");
-        isPlaying = true; document.getElementById('spin-btn').disabled = true; document.getElementById('win-tag').innerText = "";
-        if (currentGame.type === 'roulette') spinRoulette(); else spinSlots();
+        if (isPlaying || pendingTalisman) return;
+        if (freeSpins === 0 && balance < bets[betIdx]) {
+            alert("Недостаточно средств!");
+            return;
+        }
+        if (currentGame.type === 'roulette' && !rouBet) {
+            alert("Выберите цвет!");
+            return;
+        }
+        isPlaying = true;
+        document.getElementById('spin-btn').disabled = true;
+        document.getElementById('win-tag').innerText = "";
+        if (currentGame.type === 'roulette') spinRoulette(); 
+        else spinSlots();
     }
 
     function spinSlots() {
-        if (freeSpins > 0) freeSpins--; else balance -= bets[betIdx];
-        updateUI(); document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-active'));
-        const res = []; const cellH = document.querySelector('.cell').offsetHeight;
+        if (freeSpins > 0) freeSpins--; 
+        else balance -= bets[betIdx];
+        updateUI(); 
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-active'));
+        const res = []; 
+        const cellH = document.querySelector('.cell').offsetHeight;
         for (let i = 0; i < 15; i++) {
             const strip = document.getElementById(`s-${i}`);
-            let sym = (Math.random() > 0.985) ? currentGame.scatter : (Math.random() > 0.95 && currentGame.coin ? currentGame.coin : currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char);
+            let sym;
+            let r = Math.random();
+            // очень низкая вероятность скаттера и монетки
+            if (currentGame.scatter && r < 0.02) sym = currentGame.scatter;
+            else if (currentGame.coin && r < 0.03) sym = currentGame.coin;
+            else {
+                const symList = currentGame.symbols;
+                sym = symList[Math.floor(Math.random() * symList.length)].char;
+            }
             res[i] = sym;
-            let h = ''; for (let j = 0; j < 30; j++) h += `<div class="symbol">${j===0?sym:currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char}</div>`;
-            strip.innerHTML = h; strip.style.transition = 'none'; strip.style.transform = `translateY(-${29 * cellH}px)`;
-            setTimeout(() => { strip.style.transition = `transform ${1.3+(i%5)*0.12}s cubic-bezier(0.1, 0.9, 0.2, 1)`; strip.style.transform = 'translateY(0px)'; }, 50);
+            let html = '';
+            for (let j = 0; j < 30; j++) {
+                let fakeSym;
+                if (j === 0) fakeSym = sym;
+                else {
+                    let r2 = Math.random();
+                    if (currentGame.scatter && r2 < 0.02) fakeSym = currentGame.scatter;
+                    else if (currentGame.coin && r2 < 0.03) fakeSym = currentGame.coin;
+                    else fakeSym = currentGame.symbols[Math.floor(Math.random() * currentGame.symbols.length)].char;
+                }
+                html += `<div class="symbol">${fakeSym}</div>`;
+            }
+            strip.innerHTML = html;
+            strip.style.transition = 'none';
+            strip.style.transform = `translateY(-${29 * cellH}px)`;
+            setTimeout(() => { 
+                strip.style.transition = `transform ${1.3+(i%5)*0.12}s cubic-bezier(0.1, 0.9, 0.2, 1)`; 
+                strip.style.transform = 'translateY(0px)'; 
+            }, 50);
         }
         setTimeout(() => checkWins(res), 2800);
     }
@@ -266,55 +314,165 @@
         paylines.forEach(line => {
             let match = 1, first = res[line[0]];
             if (first === currentGame.scatter || first === currentGame.coin) return;
-            for (let i = 1; i < 5; i++) { if (res[line[i]] === first) match++; else break; }
+            for (let i = 1; i < 5; i++) { 
+                if (res[line[i]] === first) match++; 
+                else break; 
+            }
             if (match >= 3) {
-                const data = currentGame.symbols.find(s => s.char === first) || {val: 100};
-                win += (data.val / 10) * (match === 3 ? 1 : match === 4 ? 5 : 20) * bets[betIdx];
+                const data = currentGame.symbols.find(s => s.char === first) || {val: 15};
+                // ещё более низкие множители: 3=0.3x, 4=1x, 5=3x
+                let mult = (match === 3) ? 0.3 : (match === 4 ? 1 : 3);
+                win += (data.val / 10) * mult * bets[betIdx];
                 for (let i = 0; i < match; i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
             }
         });
-        balance += win; if (win > 0) document.getElementById('win-tag').innerText = `WIN: ${win.toFixed(2)} BYN`;
-        if (res.includes('🪙') && Math.random() > 0.5 && freeSpins === 0) spinTalisman();
-        else if (res.filter(s=>s===currentGame.scatter).length >= 3 && freeSpins === 0) {
-            showModal("БОНУС!", "10 ФРИСПИНОВ!", () => { freeSpins = 10; isPlaying = false; handlePlay(); });
-        } else if (freeSpins > 0) setTimeout(handlePlay, 1000);
-        else finalize();
+        // округлим до 2 знаков
+        win = Math.floor(win * 100) / 100;
+        balance += win; 
+        if (win > 0) document.getElementById('win-tag').innerText = `WIN: ${win.toFixed(2)} BYN`;
         save(); updateUI();
+
+        // === КОЛЕСО ТАЛИСМАНА (только для талисмана, если есть монетка) ===
+        if (currentGame.coin && res.includes(currentGame.coin) && !pendingTalisman && currentGame.isTalisman) {
+            // шанс срабатывания колеса 30% вместо 50%, чтобы реже
+            if (Math.random() < 0.3) {
+                spinTalisman();
+                return;
+            }
+        }
+        
+        // === БОНУС ЗА СКАТТЕРЫ (только НЕ для талисмана) ===
+        if (!currentGame.isTalisman) {
+            let scatterCount = res.filter(s => s === currentGame.scatter).length;
+            if (scatterCount >= 3) {
+                let addSpins = 8; // меньше фриспинов
+                if (freeSpins > 0) freeSpins += addSpins;
+                else freeSpins = addSpins;
+                showModal("БОНУС!", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, () => {
+                    if (!isPlaying && freeSpins > 0) {
+                        handlePlay();
+                    } else if (isPlaying) {
+                        isPlaying = false;
+                        document.getElementById('spin-btn').disabled = false;
+                        if (freeSpins > 0) handlePlay();
+                    } else {
+                        finalizeGame();
+                    }
+                });
+                return;
+            }
+        }
+        
+        if (freeSpins > 0) {
+            finalizeGame();
+            setTimeout(() => handlePlay(), 400);
+        } else {
+            finalizeGame();
+        }
     }
 
     function spinTalisman() {
-        const idx = Math.floor(Math.random()*5);
-        talRot += (360*5) + (360 - idx*72); document.getElementById('talisman-wheel').style.transform = `rotate(${talRot}deg)`;
+        if (pendingTalisman) return;
+        pendingTalisman = true;
+        const idx = Math.floor(Math.random() * 5);
+        talRot += (360 * 6) + (360 - idx * 72);
+        const wheel = document.getElementById('talisman-wheel');
+        wheel.style.transform = `rotate(${talRot}deg)`;
+        
         setTimeout(() => {
-            if (idx >= 3) { freeSpins = (idx===3?10:15); showModal("ТАЛИСМАН", freeSpins+" ФРИСПИНОВ!", () => { isPlaying = false; handlePlay(); }); }
-            else { 
-                const p = [2, 5, 10, 0, 0];
-                balance += p[idx]*bets[betIdx]; document.getElementById('win-tag').innerText = `+${(p[idx]*bets[betIdx]).toFixed(2)} BYN`;
-                finalize(); 
+            const multValues = [2, 5, 10];
+            if (idx < 3) {
+                let mult = multValues[idx];
+                let addWin = bets[betIdx] * mult;
+                balance += addWin;
+                document.getElementById('win-tag').innerText = `КОЛЕСО: x${mult}  +${addWin.toFixed(2)} BYN`;
+                save(); updateUI();
+                pendingTalisman = false;
+                if (freeSpins > 0) {
+                    finalizeGame();
+                    setTimeout(() => handlePlay(), 500);
+                } else {
+                    finalizeGame();
+                }
+            } else {
+                let addSpins = (idx === 3) ? 8 : 12;
+                if (freeSpins > 0) freeSpins += addSpins;
+                else freeSpins = addSpins;
+                save(); updateUI();
+                showModal("ТАЛИСМАН", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, () => {
+                    pendingTalisman = false;
+                    if (!isPlaying) {
+                        if (freeSpins > 0) handlePlay();
+                        else finalizeGame();
+                    } else {
+                        isPlaying = false;
+                        document.getElementById('spin-btn').disabled = false;
+                        if (freeSpins > 0) handlePlay();
+                    }
+                });
             }
-            save(); updateUI();
         }, 3600);
     }
 
     function spinRoulette() {
-        balance -= bets[betIdx]; const target = Math.floor(Math.random()*37);
-        rouRot += (360*5) + (target*(360/37)); document.getElementById('rou-wheel').style.transform = `rotate(-${rouRot}deg)`;
+        balance -= bets[betIdx];
+        const target = Math.floor(Math.random() * 37);
+        rouRot += (360 * 6) + (target * (360 / 37));
+        document.getElementById('rou-wheel').style.transform = `rotate(-${rouRot}deg)`;
         setTimeout(() => {
-            const num = wheelNums[target]; let win = 0;
-            if (rouBet==='red' && redNums.includes(num)) win = bets[betIdx]*2;
-            else if (rouBet==='black' && num!==0 && !redNums.includes(num)) win = bets[betIdx]*2;
-            else if (rouBet==='zero' && num===0) win = bets[betIdx]*36;
-            balance += win; document.getElementById('win-tag').innerText = win>0? `WIN: ${win.toFixed(2)}` : `ВЫПАЛО: ${num}`;
-            finalize(); save(); updateUI();
+            const num = wheelNums[target];
+            let win = 0;
+            if (rouBet === 'red' && redNums.includes(num)) win = bets[betIdx] * 2;
+            else if (rouBet === 'black' && num !== 0 && !redNums.includes(num)) win = bets[betIdx] * 2;
+            else if (rouBet === 'zero' && num === 0) win = bets[betIdx] * 36;
+            balance += win;
+            document.getElementById('win-tag').innerText = win > 0 ? `WIN: ${win.toFixed(2)} BYN` : `ВЫПАЛО: ${num}`;
+            save(); updateUI();
+            finalizeGame();
         }, 4100);
     }
 
-    function finalize() { isPlaying = false; document.getElementById('spin-btn').disabled = false; }
-    function closeModal() { document.getElementById('modal-overlay').style.display='none'; if(window.modalCb) window.modalCb(); }
-    function showModal(t, m, cb) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=m; document.getElementById('modal-overlay').style.display='flex'; window.modalCb = cb; }
+    function finalizeGame() {
+        isPlaying = false;
+        pendingTalisman = false;
+        document.getElementById('spin-btn').disabled = false;
+        save();
+        updateUI();
+    }
+
+    function closeModal() { 
+        document.getElementById('modal-overlay').style.display = 'none'; 
+        if (window.modalCb) { 
+            let cb = window.modalCb;
+            window.modalCb = null;
+            cb(); 
+        } 
+    }
+    
+    function showModal(t, m, cb) { 
+        document.getElementById('modal-title').innerText = t; 
+        document.getElementById('modal-text').innerHTML = m; 
+        document.getElementById('modal-overlay').style.display = 'flex'; 
+        window.modalCb = cb; 
+    }
+    
     function save() { localStorage.setItem('casino_bal', balance); }
-    function updateUI() { document.getElementById('balance').innerText = balance.toFixed(2); document.getElementById('display-bet').innerText = bets[betIdx].toFixed(2); }
-    function exitGame() { if (!isPlaying) { document.getElementById('lobby').style.display = 'grid'; document.getElementById('game-screen').style.display = 'none'; } }
+    function updateUI() { 
+        document.getElementById('balance').innerText = balance.toFixed(2); 
+        document.getElementById('display-bet').innerText = bets[betIdx].toFixed(2); 
+    }
+    
+    function exitGame() { 
+        if (!isPlaying && !pendingTalisman) { 
+            document.getElementById('lobby').style.display = 'grid'; 
+            document.getElementById('game-screen').style.display = 'none'; 
+            freeSpins = 0;
+            if (currentGame?.type !== 'roulette') {
+                document.getElementById('win-tag').innerText = "";
+            }
+        } 
+    }
+    
     updateUI();
 </script>
 </body>
