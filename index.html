@@ -8,14 +8,11 @@
         :root {
             --gold: #ffd700;
             --bg-grad: radial-gradient(circle, #3d2b01 0%, #000000 100%);
-            --win-green: #2ecc71;
             --cell-h: 20vh;
             --radius: 15px;
         }
-
         @media (max-width: 1024px) { :root { --cell-h: 12vh; } }
         @media (max-width: 480px) { :root { --cell-h: 68px; } }
-
         body, html {
             height: 100dvh; margin: 0; padding: 0;
             background: var(--bg-grad); color: white;
@@ -23,18 +20,14 @@
             overflow: hidden; display: flex; flex-direction: column;
             -webkit-tap-highlight-color: transparent;
         }
-
         header { width: 100%; padding: 12px 0; text-align: center; background: rgba(0,0,0,0.7); border-bottom: 1px solid #543d01; flex-shrink: 0; }
         .balance-box { font-size: 1.6rem; color: var(--gold); font-weight: 900; }
-
-        /* ЛОББИ */
         #lobby {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 15px; padding: 20px; max-width: 1200px; margin: auto;
             overflow-y: auto; flex-grow: 1; width: 100%; box-sizing: border-box;
         }
         @media (max-width: 480px) { #lobby { grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; } }
-
         .game-card {
             height: 180px; border-radius: var(--radius); border: 2px solid #543d01;
             cursor: pointer; display: flex; align-items: flex-end;
@@ -42,16 +35,11 @@
         }
         @media (max-width: 480px) { .game-card { height: 135px; } }
         .game-card h3 { background: rgba(0,0,0,0.85); width: 100%; text-align: center; margin: 0; padding: 8px; font-size: 0.65rem; color: var(--gold); text-transform: uppercase; }
-
-        /* ИГРОВОЙ ЭКРАН */
         #game-screen { display: none; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: space-between; padding-bottom: 10px; box-sizing: border-box; }
         .back-btn { align-self: flex-start; margin: 5px 10px; padding: 7px 14px; background: #222; color: #fff; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 0.7rem; z-index: 1000; }
-
-        /* ИГРОВАЯ ОБЛАСТЬ */
-        .game-area { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 1300px; flex-grow: 1; padding: 0 10px; box-sizing: border-box; min-height: 0; }
-        @media (max-width: 1024px) { .game-area { flex-direction: column; gap: 10px; } }
-
-        /* КОЛЕСО ТАЛИСМАНА */
+        .game-area { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 1300px; flex-grow: 1; padding: 0 10px; box-sizing: border-box; min-height: 0; overflow-y: auto; }
+        @media (max-width: 1024px) { .game-area { flex-direction: column; } }
+        /* старые стили (слоты, колесо, рулетка) */
         #talisman-wheel-box { display: none; position: relative; width: 150px; height: 150px; flex-shrink: 0; }
         @media (min-width: 1025px) { #talisman-wheel-box { width: 40vh; height: 40vh; } }
         #talisman-wheel {
@@ -62,417 +50,302 @@
         .wheel-ptr { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 28px solid var(--gold); z-index: 100; }
         .sector-text { position: absolute; width: 100%; height: 100%; text-align: center; font-weight: 900; color: white; padding-top: 10px; font-size: 0.7rem; pointer-events: none; }
         @media (min-width: 1025px) { .sector-text { font-size: 1.3rem; padding-top: 25px; } }
-
-        /* СЛОТЫ */
         .machine-wrap { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; max-width: 850px; }
         .side-panel { display: flex; flex-direction: column; justify-content: space-around; height: calc(var(--cell-h) * 3 + 15px); width: 24px; }
         .lnum { width: 22px; height: 18px; background: #000; border: 1px solid var(--gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: var(--gold); font-weight: bold; }
-        
         .grid-frame { background: #000; border: 3px solid var(--gold); border-radius: 20px; padding: 10px; flex-grow: 1; display: flex; }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; border-radius: 12px; overflow: hidden; width: 100%; }
         .cell { height: var(--cell-h); background: #151515; position: relative; overflow: hidden; border: 1px solid #2a2a2a; border-radius: var(--radius); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
         .symbol { height: var(--cell-h); display: flex; align-items: center; justify-content: center; font-size: calc(var(--cell-h) * 0.6); }
         .reel-strip { position: absolute; width: 100%; display: flex; flex-direction: column; }
-
-        /* УПРАВЛЕНИЕ (КАПСУЛЫ) */
         .controls-panel { width: 100%; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
         .controls { display: flex; align-items: center; justify-content: center; gap: 10px; width: 95%; max-width: 600px; padding-bottom: 5px; }
-        
-        .bet-capsule {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #000; border: 2.5px solid var(--gold); border-radius: 40px;
-            padding: 4px 15px; width: 155px; flex-shrink: 0;
-        }
+        .bet-capsule { display: flex; align-items: center; justify-content: space-between; background: #000; border: 2.5px solid var(--gold); border-radius: 40px; padding: 4px 15px; width: 155px; flex-shrink: 0; }
         .bet-btn { background: var(--gold); border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: 900; cursor: pointer; color: black; font-size: 1.2rem; }
         .bet-info { text-align: center; font-size: 0.55rem; color: #fff; text-transform: uppercase; }
         .bet-info b { display: block; font-size: 0.9rem; }
-
-        .spin-btn {
-            flex-grow: 1; padding: 18px; border-radius: 40px; border: 2px solid #fff;
-            background: linear-gradient(to bottom, #44cc44, #1a881a);
-            color: white; font-size: 1.5rem; font-weight: 900; cursor: pointer; text-transform: uppercase;
-        }
+        .spin-btn { flex-grow: 1; padding: 18px; border-radius: 40px; border: 2px solid #fff; background: linear-gradient(to bottom, #44cc44, #1a881a); color: white; font-size: 1.5rem; font-weight: 900; cursor: pointer; text-transform: uppercase; }
         .spin-btn:disabled { opacity: 0.5; filter: grayscale(1); }
         #win-tag { color: var(--gold); font-weight: 900; font-size: 1.3rem; text-transform: uppercase; min-height: 25px; text-align: center; }
-
-        /* РУЛЕТКА: ФИКС КНОПОК */
         #roulette-ui { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; z-index: 10; }
         #rou-wheel { width: 230px; height: 230px; border-radius: 50%; border: 6px solid #333; margin-bottom: 15px; transition: 4s ease-out; }
         @media (min-width: 1025px) { #rou-wheel { width: 320px; height: 320px; } }
-        
         .rou-bet-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 290px; position: relative; z-index: 2000; }
         .bet-opt { background: #111; padding: 14px; border-radius: 12px; text-align: center; border: 2px solid #444; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .bet-opt.active { border-color: var(--gold); background: #222; box-shadow: 0 0 10px var(--gold); }
-
-        /* МОДАЛКА */
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9000; justify-content: center; align-items: center; }
         .modal-content { background: #111; padding: 25px; border-radius: 20px; border: 3px solid var(--gold); text-align: center; width: 85%; max-width: 350px; }
-        
         .win-active { border: 2.5px solid var(--gold) !important; background: rgba(255, 215, 0, 0.25) !important; animation: flash 0.5s infinite alternate; z-index: 10; }
         @keyframes flash { from { opacity: 1; } to { opacity: 0.6; } }
+        /* новые игры */
+        .game-panel { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 500px; background: rgba(0,0,0,0.6); border-radius: 20px; padding: 15px; margin: 10px; }
+        .game-panel.active-game { display: flex; }
+        .cards-hand { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
+        .card { background: white; color: black; width: 70px; height: 90px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        .dice-area { display: flex; gap: 30px; justify-content: center; margin: 20px; }
+        .dice { font-size: 5rem; }
+        .wheel-segments { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .segment { background: #222; padding: 8px 12px; border-radius: 30px; border: 1px solid var(--gold); font-size: 0.8rem; }
+        .keno-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; max-width: 400px; margin: 10px auto; }
+        .keno-num { background: #1e1e1e; padding: 10px; text-align: center; border-radius: 50%; cursor: pointer; border: 1px solid #555; }
+        .keno-num.selected { background: var(--gold); color: black; }
+        .poker-cards { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .poker-card { background: white; color: black; width: 60px; height: 80px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.2rem; position: relative; }
+        .hold-btn { background: gold; color: black; border: none; border-radius: 20px; padding: 4px 8px; margin-top: 5px; font-size: 0.6rem; cursor: pointer; }
+        .treasure-chests { display: flex; gap: 15px; justify-content: center; margin: 20px; }
+        .chest { font-size: 4rem; cursor: pointer; transition: 0.2s; }
+        .horse-track { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .horse { display: flex; align-items: center; gap: 10px; background: #111; padding: 8px; border-radius: 40px; cursor: pointer; }
+        .horse-name { width: 50px; font-weight: bold; }
+        .horse-progress { flex-grow: 1; height: 20px; background: #333; border-radius: 20px; overflow: hidden; }
+        .horse-bar { width: 0%; height: 100%; background: var(--gold); transition: width 0.1s linear; }
+        .clicker-symbol { font-size: 8rem; text-align: center; margin: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div id="modal-overlay">
-    <div class="modal-content">
-        <h2 id="modal-title" style="color:var(--gold); margin-top:0;">БОНУС!</h2>
-        <p id="modal-text"></p>
-        <button onclick="closeModal()" style="margin-top:15px; padding:10px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button>
-    </div>
-</div>
-
+<div id="modal-overlay"><div class="modal-content"><h2 id="modal-title" style="color:var(--gold);">БОНУС!</h2><p id="modal-text"></p><button onclick="closeModal()" style="margin-top:15px; padding:10px 30px; background:var(--gold); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">ОК</button></div></div>
 <header><div class="balance-box">БАЛАНС: <span id="balance">1000.00</span> BYN</div></header>
-
 <div id="lobby">
     <div class="game-card" style="background:#8b0000" onclick="openGame('talisman')"><h3>TALISMAN LUCK 🧧</h3></div>
     <div class="game-card" style="background:#064e3b" onclick="openGame('roulette')"><h3>РУЛЕТКА 🎡</h3></div>
-    <div class="game-card" style="background-image:url('https://freepik.com')" onclick="openGame('book')"><h3>TREASURE BOOK 📖</h3></div>
-    <div class="game-card" style="background:#2b0347" onclick="openGame('diamonds')"><h3>SUCCESS 💎</h3></div>
-    <div class="game-card" style="background-image:url('https://freepik.com')" onclick="openGame('space')"><h3>COSMIC STARS 🚀</h3></div>
+    <div class="game-card" style="background:#2b0347" onclick="openGame('book')"><h3>TREASURE BOOK 📖</h3></div>
+    <div class="game-card" style="background:#1e3a8a" onclick="openGame('diamonds')"><h3>SUCCESS 💎</h3></div>
+    <div class="game-card" style="background:#064e3b" onclick="openGame('space')"><h3>COSMIC STARS 🚀</h3></div>
     <div class="game-card" style="background:#1e3a8a" onclick="openGame('fruits')"><h3>FRUITS 🍎</h3></div>
     <div class="game-card" style="background:#064e3b" onclick="openGame('pirate')"><h3>PIRATE LUCK 🏴‍☠️</h3></div>
     <div class="game-card" style="background:#7f1d1d" onclick="openGame('neon')"><h3>NEON 777 ⚡</h3></div>
+    <div class="game-card" style="background:#4a2e00" onclick="openGame('blackjack')"><h3>BLACKJACK 21 🃏</h3></div>
+    <div class="game-card" style="background:#2c3e50" onclick="openGame('dice')"><h3>DICE ROLL 🎲</h3></div>
+    <div class="game-card" style="background:#9b59b6" onclick="openGame('wheel')"><h3>FORTUNE WHEEL 🎡</h3></div>
+    <div class="game-card" style="background:#e67e22" onclick="openGame('keno')"><h3>KENO LOTTO 🎰</h3></div>
+    <div class="game-card" style="background:#16a085" onclick="openGame('videopoker')"><h3>VIDEO POKER 🃛</h3></div>
+    <div class="game-card" style="background:#c0392b" onclick="openGame('clicker')"><h3>CLICKER SLOT 🎰</h3></div>
+    <div class="game-card" style="background:#d35400" onclick="openGame('chest')"><h3>TREASURE CHEST 🧰</h3></div>
+    <div class="game-card" style="background:#2980b9" onclick="openGame('horses')"><h3>HORSE RACING 🐎</h3></div>
 </div>
-
 <div id="game-screen">
     <button class="back-btn" onclick="exitGame()">← МЕНЮ</button>
-    
     <div class="game-area">
-        <div id="talisman-wheel-box">
-            <div class="wheel-ptr"></div>
-            <div id="talisman-wheel">
-                <div class="sector-text" style="transform: rotate(36deg)">x2</div>
-                <div class="sector-text" style="transform: rotate(108deg)">x5</div>
-                <div class="sector-text" style="transform: rotate(180deg)">x10</div>
-                <div class="sector-text" style="transform: rotate(252deg)">10 FS</div>
-                <div class="sector-text" style="transform: rotate(324deg)">15 FS</div>
-            </div>
-        </div>
-
-        <div id="slot-ui-wrap" class="machine-wrap">
-            <div class="side-panel" id="l-nums"></div>
-            <div class="grid-frame"><div class="grid" id="slot-grid"></div></div>
-            <div class="side-panel" id="r-nums"></div>
-        </div>
-
-        <div id="roulette-ui">
-            <div style="position:relative;">
-                <div class="wheel-ptr" style="top:-15px;"></div>
-                <div id="rou-wheel" style="background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg);"></div>
-            </div>
-            <div class="rou-bet-grid">
-                <div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red', this)">КРАСНОЕ</div>
-                <div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black', this)">ЧЕРНОЕ</div>
-                <div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero', this)">ЗЕРО (x36)</div>
-            </div>
-        </div>
+        <div id="talisman-wheel-box"><div class="wheel-ptr"></div><div id="talisman-wheel"><div class="sector-text" style="transform: rotate(36deg)">x2</div><div class="sector-text" style="transform: rotate(108deg)">x5</div><div class="sector-text" style="transform: rotate(180deg)">x10</div><div class="sector-text" style="transform: rotate(252deg)">10 FS</div><div class="sector-text" style="transform: rotate(324deg)">15 FS</div></div></div>
+        <div id="slot-ui-wrap" class="machine-wrap"><div class="side-panel" id="l-nums"></div><div class="grid-frame"><div class="grid" id="slot-grid"></div></div><div class="side-panel" id="r-nums"></div></div>
+        <div id="roulette-ui"><div style="position:relative;"><div class="wheel-ptr" style="top:-15px;"></div><div id="rou-wheel" style="background: conic-gradient(#2e7d32 0deg 9.7deg, #d32f2f 9.7deg 19.4deg, #212121 19.4deg 29.1deg, #d32f2f 29.1deg 38.8deg, #212121 38.8deg 48.5deg, #d32f2f 48.5deg 58.2deg, #212121 58.2deg 67.9deg, #d32f2f 67.9deg 77.6deg, #212121 77.6deg 87.3deg, #d32f2f 87.3deg 97deg, #212121 97deg 106.7deg, #d32f2f 106.7deg 116.4deg, #212121 116.4deg 126.1deg, #d32f2f 126.1deg 135.8deg, #212121 135.8deg 145.5deg, #d32f2f 145.5deg 155.2deg, #212121 155.2deg 164.9deg, #d32f2f 164.9deg 174.6deg, #212121 174.6deg 184.3deg, #d32f2f 184.3deg 194deg, #212121 194deg 203.7deg, #d32f2f 203.7deg 213.4deg, #212121 213.4deg 223.1deg, #d32f2f 223.1deg 232.8deg, #212121 232.8deg 242.5deg, #d32f2f 242.5deg 252.2deg, #212121 252.2deg 261.9deg, #d32f2f 261.9deg 271.6deg, #212121 271.6deg 281.3deg, #d32f2f 281.3deg 291deg, #212121 291deg 300.7deg, #d32f2f 300.7deg 310.4deg, #212121 310.4deg 320.1deg, #d32f2f 320.1deg 329.8deg, #212121 329.8deg 339.5deg, #d32f2f 339.5deg 349.2deg, #212121 349.2deg 360deg);"></div></div><div class="rou-bet-grid"><div class="bet-opt" id="r-red" style="color:#ff4444" onclick="setRouBet('red', this)">КРАСНОЕ</div><div class="bet-opt" id="r-black" style="color:#aaa" onclick="setRouBet('black', this)">ЧЕРНОЕ</div><div class="bet-opt" id="r-zero" style="grid-column:span 2; color:#44cc44" onclick="setRouBet('zero', this)">ЗЕРО (x36)</div></div></div>
+        <!-- Новые панели -->
+        <div id="blackjack-panel" class="game-panel"><h3>BLACKJACK</h3><div>Ваши карты: <span id="bj-player-cards"></span> (очки: <span id="bj-player-score">0</span>)</div><div>Карты дилера: <span id="bj-dealer-cards"></span> (очки: <span id="bj-dealer-score">0</span>)</div><div><button onclick="bjHit()" class="spin-btn" style="padding:8px 16px; font-size:1rem;">ВЗЯТЬ</button> <button onclick="bjStand()" class="spin-btn" style="padding:8px 16px; font-size:1rem;">СТОП</button></div><div id="bj-message"></div></div>
+        <div id="dice-panel" class="game-panel"><h3>DICE ROLL</h3><div class="dice-area"><div class="dice" id="dice1">⚀</div><div class="dice" id="dice2">⚀</div></div><div><button onclick="rollDice()" class="spin-btn" style="padding:8px 16px;">БРОСИТЬ</button></div><div>Ставка на: <select id="dice-bet-type"><option value="big">БОЛЬШОЕ (11-18) x2</option><option value="small">МАЛОЕ (4-10) x2</option><option value="double">ДУБЛЬ x8</option></select></div><div id="dice-result"></div></div>
+        <div id="wheel-panel" class="game-panel"><h3>FORTUNE WHEEL</h3><div id="wheel-display" style="font-size:2rem;">🎡</div><button onclick="spinFortuneWheel()" class="spin-btn">КРУТИТЬ</button><div id="wheel-result"></div><div class="wheel-segments"><span class="segment">x2</span><span class="segment">x5</span><span class="segment">x10</span><span class="segment">FS8</span><span class="segment">FS12</span><span class="segment">x3</span><span class="segment">x7</span><span class="segment">JACKPOTx20</span></div></div>
+        <div id="keno-panel" class="game-panel"><h3>KENO (выберите 5 чисел)</h3><div id="keno-grid" class="keno-grid"></div><button onclick="playKeno()" class="spin-btn">ИГРАТЬ</button><div id="keno-result"></div></div>
+        <div id="videopoker-panel" class="game-panel"><h3>VIDEO POKER (Jacks or Better)</h3><div id="poker-cards" class="poker-cards"></div><button onclick="drawPoker()" class="spin-btn">СДАТЬ</button><button onclick="holdAndDraw()" class="spin-btn" style="background:#e67e22;">УДЕРЖАТЬ/ОБМЕН</button><div id="poker-result"></div></div>
+        <div id="clicker-panel" class="game-panel"><h3>CLICKER SLOT</h3><div class="clicker-symbol" id="clicker-symbol">🎰</div><button onclick="spinClicker()" class="spin-btn">КРУТИТЬ</button><div id="clicker-result"></div></div>
+        <div id="chest-panel" class="game-panel"><h3>Выбери сундук</h3><div class="treasure-chests"><div class="chest" onclick="openChest(0)">📦</div><div class="chest" onclick="openChest(1)">📦</div><div class="chest" onclick="openChest(2)">📦</div><div class="chest" onclick="openChest(3)">📦</div><div class="chest" onclick="openChest(4)">📦</div></div><div id="chest-result"></div></div>
+        <div id="horses-panel" class="game-panel"><h3>Сделайте ставку на лошадь</h3><div class="horse-track" id="horse-track"></div><div id="horse-result"></div></div>
     </div>
-
-    <div class="controls-panel">
-        <div id="win-tag"></div>
-        <div class="controls">
-            <div class="bet-capsule">
-                <button onclick="changeBet(-1)" class="bet-btn">-</button>
-                <div class="bet-info">СТАВКА <b id="display-bet">50.00</b></div>
-                <button onclick="changeBet(1)" class="bet-btn">+</button>
-            </div>
-            <button class="spin-btn" id="spin-btn" onclick="handlePlay()">ИГРАТЬ</button>
-        </div>
-    </div>
+    <div class="controls-panel"><div id="win-tag"></div><div class="controls"><div class="bet-capsule"><button onclick="changeBet(-1)" class="bet-btn">-</button><div class="bet-info">СТАВКА <b id="display-bet">50.00</b></div><button onclick="changeBet(1)" class="bet-btn">+</button></div><button class="spin-btn" id="spin-btn" onclick="handlePlay()">ИГРАТЬ</button></div></div>
 </div>
-
 <script>
     let balance = parseFloat(localStorage.getItem('casino_bal')) || 1000.00;
     let betIdx = 4;
-    const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00, 1000, 10000, 100000 ];
+    const bets = [0.10, 0.50, 1.00, 10.00, 50.00, 100.00, 500.00, 1000, 10000, 100000];
     let isPlaying = false, currentGame = null, rouBet = null, freeSpins = 0;
     let talRot = 0, rouRot = 0;
     let pendingTalisman = false;
-
-    const paylines = [
-        [5, 6, 7, 8, 9], [0, 1, 2, 3, 4], [10, 11, 12, 13, 14],
-        [0, 6, 12, 8, 4], [10, 6, 2, 8, 14], [0, 1, 7, 13, 14],
-        [10, 11, 7, 3, 4], [5, 1, 2, 3, 9], [5, 11, 12, 13, 9], [0, 6, 7, 8, 14]
-    ];
-    const sideNums = [4, 2, 8, 1, 10, 6, 9, 7, 3, 5];
-    const wheelNums = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-    const redNums = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-
-    // СИЛЬНО УМЕНЬШЕННЫЕ ВЫИГРЫШИ И РЕДКИЕ БОНУСЫ
+    // Переменные для новых игр
+    let bjDeck = [], bjPlayerHand = [], bjDealerHand = [], bjGameActive = false;
+    let pokerHand = [], pokerHeld = [false,false,false,false,false], pokerDeck = [], pokerAfterDraw = false;
+    let kenoSelected = [];
+    let horseRaceInterval = null;
+    // Старые данные
+    const paylines = [[5,6,7,8,9],[0,1,2,3,4],[10,11,12,13,14],[0,6,12,8,4],[10,6,2,8,14],[0,1,7,13,14],[10,11,7,3,4],[5,1,2,3,9],[5,11,12,13,9],[0,6,7,8,14]];
+    const sideNums = [4,2,8,1,10,6,9,7,3,5];
+    const wheelNums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+    const redNums = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
     const gameConfigs = {
-        talisman: { symbols:[{char:'🐼', val:80},{char:'🏮', val:30},{char:'🪭', val:15}], scatter:'🧧', coin:'🪙' },
-        book: { symbols:[{char:'🤠', val:80},{char:'👺', val:30},{char:'🪲', val:15}], scatter:'📖' },
-        diamonds: { symbols:[{char:'💎', val:80},{char:'7️⃣', val:30},{char:'🔔', val:15}], scatter:'⭐' },
-        space: { symbols:[{char:'👽', val:80},{char:'🚀', val:30},{char:'🪐', val:15}], scatter:'🛸' },
-        fruits: { symbols:[{char:'🍎', val:80},{char:'🍒', val:30},{char:'🍋', val:15}], scatter:'🎁' },
-        pirate: { symbols:[{char:'🏴‍☠️', val:80},{char:'⚓', val:30},{char:'⚔️', val:15}], scatter:'🦜' },
-        neon: { symbols:[{char:'7️⃣', val:80},{char:'🔔', val:30},{char:'🍀', val:15}], scatter:'🔥' }
+        talisman:{symbols:[{char:'🐼',val:80},{char:'🏮',val:30},{char:'🪭',val:15}],scatter:'🧧',coin:'🪙'},
+        book:{symbols:[{char:'🤠',val:80},{char:'👺',val:30},{char:'🪲',val:15}],scatter:'📖'},
+        diamonds:{symbols:[{char:'💎',val:80},{char:'7️⃣',val:30},{char:'🔔',val:15}],scatter:'⭐'},
+        space:{symbols:[{char:'👽',val:80},{char:'🚀',val:30},{char:'🪐',val:15}],scatter:'🛸'},
+        fruits:{symbols:[{char:'🍎',val:80},{char:'🍒',val:30},{char:'🍋',val:15}],scatter:'🎁'},
+        pirate:{symbols:[{char:'🏴‍☠️',val:80},{char:'⚓',val:30},{char:'⚔️',val:15}],scatter:'🦜'},
+        neon:{symbols:[{char:'7️⃣',val:80},{char:'🔔',val:30},{char:'🍀',val:15}],scatter:'🔥'}
     };
-
     function openGame(id) {
-        if (isPlaying) return;
+        if(isPlaying) return;
         document.getElementById('lobby').style.display = 'none';
         document.getElementById('game-screen').style.display = 'flex';
-        const isRou = (id === 'roulette');
-        document.getElementById('roulette-ui').style.display = isRou ? 'flex' : 'none';
-        document.getElementById('slot-ui-wrap').style.display = isRou ? 'none' : 'flex';
-        document.getElementById('talisman-wheel-box').style.display = (id === 'talisman') ? 'block' : 'none';
-        if (!isRou) { 
-            currentGame = gameConfigs[id] || gameConfigs['book']; 
-            currentGame.isTalisman = (id === 'talisman');
-            initGrid(); 
-            initLines(); 
-        } else { 
-            currentGame = { type: 'roulette' }; 
-            rouBet = null; 
-            document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('active')); 
-        }
+        document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active-game'));
+        document.getElementById('roulette-ui').style.display = 'none';
+        document.getElementById('slot-ui-wrap').style.display = 'none';
+        document.getElementById('talisman-wheel-box').style.display = 'none';
+        if(id === 'roulette') document.getElementById('roulette-ui').style.display = 'flex';
+        else if(id === 'talisman') { document.getElementById('talisman-wheel-box').style.display = 'block'; document.getElementById('slot-ui-wrap').style.display = 'flex'; currentGame = gameConfigs.talisman; currentGame.isTalisman=true; initGrid(); initLines(); }
+        else if(['book','diamonds','space','fruits','pirate','neon'].includes(id)) { document.getElementById('slot-ui-wrap').style.display = 'flex'; currentGame = gameConfigs[id]; currentGame.isTalisman=false; initGrid(); initLines(); }
+        else if(id === 'blackjack') { document.getElementById('blackjack-panel').classList.add('active-game'); initBlackjack(); }
+        else if(id === 'dice') document.getElementById('dice-panel').classList.add('active-game');
+        else if(id === 'wheel') document.getElementById('wheel-panel').classList.add('active-game');
+        else if(id === 'keno') { document.getElementById('keno-panel').classList.add('active-game'); initKenoGrid(); }
+        else if(id === 'videopoker') { document.getElementById('videopoker-panel').classList.add('active-game'); initPokerDeck(); pokerAfterDraw=false; updatePokerUI(); }
+        else if(id === 'clicker') document.getElementById('clicker-panel').classList.add('active-game');
+        else if(id === 'chest') document.getElementById('chest-panel').classList.add('active-game');
+        else if(id === 'horses') { document.getElementById('horses-panel').classList.add('active-game'); initHorses(); }
+        currentGame = currentGame || { type: id };
         updateUI();
     }
-
-    function initGrid() {
-        const g = document.getElementById('slot-grid'); g.innerHTML = '';
-        for (let i = 0; i < 15; i++) g.innerHTML += `<div class="cell"><div class="reel-strip" id="s-${i}"><div class="symbol">?</div></div></div>`;
-    }
-
-    function initLines() {
-        const html = sideNums.map(n => `<div class="lnum">${n}</div>`).join('');
-        document.getElementById('l-nums').innerHTML = document.getElementById('r-nums').innerHTML = html;
-    }
-
-    function changeBet(v) { if (!isPlaying) { betIdx = Math.max(0, Math.min(bets.length - 1, betIdx + v)); updateUI(); } }
-    
-    function setRouBet(t, el) { 
-        if (isPlaying) return;
-        rouBet = t; 
-        document.querySelectorAll('.bet-opt').forEach(b => b.classList.remove('active')); 
-        el.classList.add('active'); 
-    }
-
+    function initGrid(){ const g=document.getElementById('slot-grid'); g.innerHTML=''; for(let i=0;i<15;i++) g.innerHTML+=`<div class="cell"><div class="reel-strip" id="s-${i}"><div class="symbol">?</div></div></div>`; }
+    function initLines(){ const html=sideNums.map(n=>`<div class="lnum">${n}</div>`).join(''); document.getElementById('l-nums').innerHTML=document.getElementById('r-nums').innerHTML=html; }
+    function changeBet(v){ if(!isPlaying){ betIdx=Math.max(0,Math.min(bets.length-1,betIdx+v)); updateUI(); } }
+    function setRouBet(t,el){ if(isPlaying) return; rouBet=t; document.querySelectorAll('.bet-opt').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
     function handlePlay() {
-        if (isPlaying || pendingTalisman) return;
-        if (freeSpins === 0 && balance < bets[betIdx]) {
-            alert("Недостаточно средств!");
-            return;
-        }
-        if (currentGame.type === 'roulette' && !rouBet) {
-            alert("Выберите цвет!");
-            return;
-        }
-        isPlaying = true;
-        document.getElementById('spin-btn').disabled = true;
-        document.getElementById('win-tag').innerText = "";
-        if (currentGame.type === 'roulette') spinRoulette(); 
-        else spinSlots();
+        if(isPlaying || pendingTalisman) return;
+        if(freeSpins===0 && balance<bets[betIdx]){ alert("Недостаточно средств!"); return; }
+        if(currentGame?.type==='roulette' && !rouBet){ alert("Выберите цвет!"); return; }
+        if(currentGame?.type==='roulette') spinRoulette();
+        else if(currentGame?.symbols) spinSlots();
+        else alert("Выберите игру из лобби");
     }
-
+    // ПОЛНАЯ РЕАЛИЗАЦИЯ СЛОТОВ
     function spinSlots() {
-        if (freeSpins > 0) freeSpins--; 
-        else balance -= bets[betIdx];
-        updateUI(); 
-        document.querySelectorAll('.cell').forEach(c => c.classList.remove('win-active'));
-        const res = []; 
-        const cellH = document.querySelector('.cell').offsetHeight;
-        for (let i = 0; i < 15; i++) {
-            const strip = document.getElementById(`s-${i}`);
+        if(freeSpins>0) freeSpins--; else balance-=bets[betIdx];
+        updateUI();
+        document.querySelectorAll('.cell').forEach(c=>c.classList.remove('win-active'));
+        const res=[]; const cellH=document.querySelector('.cell').offsetHeight;
+        for(let i=0;i<15;i++){
+            const strip=document.getElementById(`s-${i}`);
             let sym;
-            let r = Math.random();
-            // очень низкая вероятность скаттера и монетки
-            if (currentGame.scatter && r < 0.02) sym = currentGame.scatter;
-            else if (currentGame.coin && r < 0.03) sym = currentGame.coin;
-            else {
-                const symList = currentGame.symbols;
-                sym = symList[Math.floor(Math.random() * symList.length)].char;
-            }
-            res[i] = sym;
-            let html = '';
-            for (let j = 0; j < 30; j++) {
+            let r=Math.random();
+            if(currentGame.scatter && r<0.02) sym=currentGame.scatter;
+            else if(currentGame.coin && r<0.03) sym=currentGame.coin;
+            else { const symList=currentGame.symbols; sym=symList[Math.floor(Math.random()*symList.length)].char; }
+            res[i]=sym;
+            let html='';
+            for(let j=0;j<30;j++){
                 let fakeSym;
-                if (j === 0) fakeSym = sym;
-                else {
-                    let r2 = Math.random();
-                    if (currentGame.scatter && r2 < 0.02) fakeSym = currentGame.scatter;
-                    else if (currentGame.coin && r2 < 0.03) fakeSym = currentGame.coin;
-                    else fakeSym = currentGame.symbols[Math.floor(Math.random() * currentGame.symbols.length)].char;
-                }
-                html += `<div class="symbol">${fakeSym}</div>`;
+                if(j===0) fakeSym=sym;
+                else { let r2=Math.random(); if(currentGame.scatter && r2<0.02) fakeSym=currentGame.scatter; else if(currentGame.coin && r2<0.03) fakeSym=currentGame.coin; else fakeSym=currentGame.symbols[Math.floor(Math.random()*currentGame.symbols.length)].char; }
+                html+=`<div class="symbol">${fakeSym}</div>`;
             }
-            strip.innerHTML = html;
-            strip.style.transition = 'none';
-            strip.style.transform = `translateY(-${29 * cellH}px)`;
-            setTimeout(() => { 
-                strip.style.transition = `transform ${1.3+(i%5)*0.12}s cubic-bezier(0.1, 0.9, 0.2, 1)`; 
-                strip.style.transform = 'translateY(0px)'; 
-            }, 50);
+            strip.innerHTML=html;
+            strip.style.transition='none';
+            strip.style.transform=`translateY(-${29*cellH}px)`;
+            setTimeout(()=>{ strip.style.transition=`transform ${1.3+(i%5)*0.12}s cubic-bezier(0.1,0.9,0.2,1)`; strip.style.transform='translateY(0px)'; },50);
         }
-        setTimeout(() => checkWins(res), 2800);
+        setTimeout(()=>checkWins(res),2800);
     }
-
-    function checkWins(res) {
-        let win = 0;
-        paylines.forEach(line => {
-            let match = 1, first = res[line[0]];
-            if (first === currentGame.scatter || first === currentGame.coin) return;
-            for (let i = 1; i < 5; i++) { 
-                if (res[line[i]] === first) match++; 
-                else break; 
-            }
-            if (match >= 3) {
-                const data = currentGame.symbols.find(s => s.char === first) || {val: 15};
-                // ещё более низкие множители: 3=0.3x, 4=1x, 5=3x
-                let mult = (match === 3) ? 0.3 : (match === 4 ? 1 : 3);
-                win += (data.val / 10) * mult * bets[betIdx];
-                for (let i = 0; i < match; i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
+    function checkWins(res){
+        let win=0;
+        paylines.forEach(line=>{
+            let match=1, first=res[line[0]];
+            if(first===currentGame.scatter || first===currentGame.coin) return;
+            for(let i=1;i<5;i++){ if(res[line[i]]===first) match++; else break; }
+            if(match>=3){
+                const data=currentGame.symbols.find(s=>s.char===first)||{val:15};
+                let mult=(match===3)?0.3:(match===4?1:3);
+                win+=(data.val/10)*mult*bets[betIdx];
+                for(let i=0;i<match;i++) document.querySelectorAll('.cell')[line[i]].classList.add('win-active');
             }
         });
-        // округлим до 2 знаков
-        win = Math.floor(win * 100) / 100;
-        balance += win; 
-        if (win > 0) document.getElementById('win-tag').innerText = `WIN: ${win.toFixed(2)} BYN`;
+        win=Math.floor(win*100)/100;
+        balance+=win;
+        if(win>0) document.getElementById('win-tag').innerText=`WIN: ${win.toFixed(2)} BYN`;
         save(); updateUI();
-
-        // === КОЛЕСО ТАЛИСМАНА (только для талисмана, если есть монетка) ===
-        if (currentGame.coin && res.includes(currentGame.coin) && !pendingTalisman && currentGame.isTalisman) {
-            // шанс срабатывания колеса 30% вместо 50%, чтобы реже
-            if (Math.random() < 0.3) {
-                spinTalisman();
-                return;
-            }
+        if(currentGame.coin && res.includes(currentGame.coin) && !pendingTalisman && currentGame.isTalisman){
+            if(Math.random()<0.3){ spinTalisman(); return; }
         }
-        
-        // === БОНУС ЗА СКАТТЕРЫ (только НЕ для талисмана) ===
-        if (!currentGame.isTalisman) {
-            let scatterCount = res.filter(s => s === currentGame.scatter).length;
-            if (scatterCount >= 3) {
-                let addSpins = 8; // меньше фриспинов
-                if (freeSpins > 0) freeSpins += addSpins;
-                else freeSpins = addSpins;
-                showModal("БОНУС!", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, () => {
-                    if (!isPlaying && freeSpins > 0) {
-                        handlePlay();
-                    } else if (isPlaying) {
-                        isPlaying = false;
-                        document.getElementById('spin-btn').disabled = false;
-                        if (freeSpins > 0) handlePlay();
-                    } else {
-                        finalizeGame();
-                    }
+        if(!currentGame.isTalisman){
+            let scatterCount=res.filter(s=>s===currentGame.scatter).length;
+            if(scatterCount>=3){
+                let addSpins=8;
+                if(freeSpins>0) freeSpins+=addSpins; else freeSpins=addSpins;
+                showModal("БОНУС!", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, ()=>{
+                    if(!isPlaying && freeSpins>0) handlePlay();
+                    else if(isPlaying){ isPlaying=false; document.getElementById('spin-btn').disabled=false; if(freeSpins>0) handlePlay(); }
+                    else finalizeGame();
                 });
                 return;
             }
         }
-        
-        if (freeSpins > 0) {
-            finalizeGame();
-            setTimeout(() => handlePlay(), 400);
-        } else {
-            finalizeGame();
-        }
+        if(freeSpins>0){ finalizeGame(); setTimeout(()=>handlePlay(),400); }
+        else finalizeGame();
     }
-
-    function spinTalisman() {
-        if (pendingTalisman) return;
-        pendingTalisman = true;
-        const idx = Math.floor(Math.random() * 5);
-        talRot += (360 * 6) + (360 - idx * 72);
-        const wheel = document.getElementById('talisman-wheel');
-        wheel.style.transform = `rotate(${talRot}deg)`;
-        
-        setTimeout(() => {
-            const multValues = [2, 5, 10];
-            if (idx < 3) {
-                let mult = multValues[idx];
-                let addWin = bets[betIdx] * mult;
-                balance += addWin;
-                document.getElementById('win-tag').innerText = `КОЛЕСО: x${mult}  +${addWin.toFixed(2)} BYN`;
+    function spinTalisman(){
+        if(pendingTalisman) return;
+        pendingTalisman=true;
+        const idx=Math.floor(Math.random()*5);
+        talRot+=(360*6)+(360-idx*72);
+        document.getElementById('talisman-wheel').style.transform=`rotate(${talRot}deg)`;
+        setTimeout(()=>{
+            const multValues=[2,5,10];
+            if(idx<3){
+                let mult=multValues[idx];
+                let addWin=bets[betIdx]*mult;
+                balance+=addWin;
+                document.getElementById('win-tag').innerText=`КОЛЕСО: x${mult}  +${addWin.toFixed(2)} BYN`;
                 save(); updateUI();
-                pendingTalisman = false;
-                if (freeSpins > 0) {
-                    finalizeGame();
-                    setTimeout(() => handlePlay(), 500);
-                } else {
-                    finalizeGame();
-                }
+                pendingTalisman=false;
+                if(freeSpins>0){ finalizeGame(); setTimeout(()=>handlePlay(),500); }
+                else finalizeGame();
             } else {
-                let addSpins = (idx === 3) ? 8 : 12;
-                if (freeSpins > 0) freeSpins += addSpins;
-                else freeSpins = addSpins;
+                let addSpins=(idx===3)?8:12;
+                if(freeSpins>0) freeSpins+=addSpins; else freeSpins=addSpins;
                 save(); updateUI();
-                showModal("ТАЛИСМАН", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, () => {
-                    pendingTalisman = false;
-                    if (!isPlaying) {
-                        if (freeSpins > 0) handlePlay();
-                        else finalizeGame();
-                    } else {
-                        isPlaying = false;
-                        document.getElementById('spin-btn').disabled = false;
-                        if (freeSpins > 0) handlePlay();
-                    }
+                showModal("ТАЛИСМАН", `+${addSpins} ФРИСПИНОВ! Всего: ${freeSpins}`, ()=>{
+                    pendingTalisman=false;
+                    if(!isPlaying){ if(freeSpins>0) handlePlay(); else finalizeGame(); }
+                    else{ isPlaying=false; document.getElementById('spin-btn').disabled=false; if(freeSpins>0) handlePlay(); }
                 });
             }
-        }, 3600);
+        },3600);
     }
-
-    function spinRoulette() {
-        balance -= bets[betIdx];
-        const target = Math.floor(Math.random() * 37);
-        rouRot += (360 * 6) + (target * (360 / 37));
-        document.getElementById('rou-wheel').style.transform = `rotate(-${rouRot}deg)`;
-        setTimeout(() => {
-            const num = wheelNums[target];
-            let win = 0;
-            if (rouBet === 'red' && redNums.includes(num)) win = bets[betIdx] * 2;
-            else if (rouBet === 'black' && num !== 0 && !redNums.includes(num)) win = bets[betIdx] * 2;
-            else if (rouBet === 'zero' && num === 0) win = bets[betIdx] * 36;
-            balance += win;
-            document.getElementById('win-tag').innerText = win > 0 ? `WIN: ${win.toFixed(2)} BYN` : `ВЫПАЛО: ${num}`;
+    function spinRoulette(){
+        balance-=bets[betIdx];
+        const target=Math.floor(Math.random()*37);
+        rouRot+=(360*6)+(target*(360/37));
+        document.getElementById('rou-wheel').style.transform=`rotate(-${rouRot}deg)`;
+        setTimeout(()=>{
+            const num=wheelNums[target];
+            let win=0;
+            if(rouBet==='red' && redNums.includes(num)) win=bets[betIdx]*2;
+            else if(rouBet==='black' && num!==0 && !redNums.includes(num)) win=bets[betIdx]*2;
+            else if(rouBet==='zero' && num===0) win=bets[betIdx]*36;
+            balance+=win;
+            document.getElementById('win-tag').innerText=win>0?`WIN: ${win.toFixed(2)} BYN`:`ВЫПАЛО: ${num}`;
             save(); updateUI();
             finalizeGame();
-        }, 4100);
+        },4100);
     }
-
-    function finalizeGame() {
-        isPlaying = false;
-        pendingTalisman = false;
-        document.getElementById('spin-btn').disabled = false;
-        save();
-        updateUI();
-    }
-
-    function closeModal() { 
-        document.getElementById('modal-overlay').style.display = 'none'; 
-        if (window.modalCb) { 
-            let cb = window.modalCb;
-            window.modalCb = null;
-            cb(); 
-        } 
-    }
-    
-    function showModal(t, m, cb) { 
-        document.getElementById('modal-title').innerText = t; 
-        document.getElementById('modal-text').innerHTML = m; 
-        document.getElementById('modal-overlay').style.display = 'flex'; 
-        window.modalCb = cb; 
-    }
-    
-    function save() { localStorage.setItem('casino_bal', balance); }
-    function updateUI() { 
-        document.getElementById('balance').innerText = balance.toFixed(2); 
-        document.getElementById('display-bet').innerText = bets[betIdx].toFixed(2); 
-    }
-    
-    function exitGame() { 
-        if (!isPlaying && !pendingTalisman) { 
-            document.getElementById('lobby').style.display = 'grid'; 
-            document.getElementById('game-screen').style.display = 'none'; 
-            freeSpins = 0;
-            if (currentGame?.type !== 'roulette') {
-                document.getElementById('win-tag').innerText = "";
-            }
-        } 
-    }
-    
+    function finalizeGame(){ isPlaying=false; pendingTalisman=false; document.getElementById('spin-btn').disabled=false; save(); updateUI(); }
+    function closeModal(){ document.getElementById('modal-overlay').style.display='none'; if(window.modalCb) window.modalCb(); }
+    function showModal(t,m,cb){ document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerHTML=m; document.getElementById('modal-overlay').style.display='flex'; window.modalCb=cb; }
+    function save(){ localStorage.setItem('casino_bal',balance); }
+    function updateUI(){ document.getElementById('balance').innerText=balance.toFixed(2); document.getElementById('display-bet').innerText=bets[betIdx].toFixed(2); }
+    function exitGame(){ if(!isPlaying && !pendingTalisman){ document.getElementById('lobby').style.display='grid'; document.getElementById('game-screen').style.display='none'; freeSpins=0; } }
+    // ========== BLACKJACK ==========
+    function createDeck(){ let suits=['♥','♦','♣','♠']; let values=['2','3','4','5','6','7','8','9','10','J','Q','K','A']; let deck=[]; for(let s of suits) for(let v of values) deck.push({val:v, suit:s, points: v==='A'?11 : ['K','Q','J'].includes(v)?10 : parseInt(v)}); return shuffle(deck); }
+    function shuffle(deck){ for(let i=deck.length-1;i>0;i--){ let j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; } return deck; }
+    function calcHand(hand){ let sum=hand.reduce((s,c)=>s+c.points,0); let aces=hand.filter(c=>c.val==='A').length; while(sum>21 && aces>0){ sum-=10; aces--; } return sum; }
+    function initBlackjack(){ bjDeck=createDeck(); bjPlayerHand=[bjDeck.pop(),bjDeck.pop()]; bjDealerHand=[bjDeck.pop(),bjDeck.pop()]; bjGameActive=true; updateBlackjackUI(); document.getElementById('bj-message').innerText=''; }
+    function updateBlackjackUI(){ document.getElementById('bj-player-cards').innerHTML=bjPlayerHand.map(c=>`${c.val}${c.suit}`).join(' '); document.getElementById('bj-player-score').innerText=calcHand(bjPlayerHand); document.getElementById('bj-dealer-cards').innerHTML=bjDealerHand.map(c=>`${c.val}${c.suit}`).join(' '); document.getElementById('bj-dealer-score').innerText=calcHand(bjDealerHand); }
+    async function bjHit(){ if(!bjGameActive) return; if(calcHand(bjPlayerHand)>=21) return; bjPlayerHand.push(bjDeck.pop()); updateBlackjackUI(); if(calcHand(bjPlayerHand)>21){ bjGameActive=false; balance-=bets[betIdx]; document.getElementById('bj-message').innerText='Перебор! Вы проиграли.'; updateUI(); finalizeGame(); } }
+    async function bjStand(){ if(!bjGameActive) return; bjGameActive=false; while(calcHand(bjDealerHand)<17) bjDealerHand.push(bjDeck.pop()); updateBlackjackUI(); let pScore=calcHand(bjPlayerHand), dScore=calcHand(bjDealerHand); let win=0; if(dScore>21 || pScore>dScore) win=bets[betIdx]; else if(pScore===dScore) win=0; else win=-bets[betIdx]; balance+=win; document.getElementById('bj-message').innerText=win>0?`Вы выиграли ${win.toFixed(2)}!`:(win<0?`Проигрыш ${(-win).toFixed(2)}`:'Ничья'); updateUI(); finalizeGame(); }
+    // ========== DICE ==========
+    function rollDice(){ if(isPlaying) return; let d1=Math.floor(Math.random()*6)+1, d2=Math.floor(Math.random()*6)+1; let sum=d1+d2; let type=document.getElementById('dice-bet-type').value; let win=0; if(type==='big' && sum>=11 && sum<=18 && d1!==d2) win=bets[betIdx]*2; else if(type==='small' && sum>=4 && sum<=10 && d1!==d2) win=bets[betIdx]*2; else if(type==='double' && d1===d2) win=bets[betIdx]*8; balance+=win-bets[betIdx]; document.getElementById('dice-result').innerHTML=`${d1} + ${d2} = ${sum} | ${win>0?'Выигрыш '+win.toFixed(2):'Проигрыш'}`; updateUI(); finalizeGame(); }
+    // ========== FORTUNE WHEEL ==========
+    function spinFortuneWheel(){ if(isPlaying) return; let segments=[2,5,10,8,12,3,7,20]; let idx=Math.floor(Math.random()*segments.length); let prize=segments[idx]; if(prize<=12 && prize!==8 && prize!==12) { let win=bets[betIdx]*prize; balance+=win; document.getElementById('wheel-result').innerHTML=`Выпало x${prize}! +${win.toFixed(2)}`; } else { let spins=prize===8?8:12; freeSpins+=spins; document.getElementById('wheel-result').innerHTML=`+${spins} фриспинов! Всего: ${freeSpins}`; } updateUI(); finalizeGame(); }
+    // ========== KENO ==========
+    function initKenoGrid(){ let grid=document.getElementById('keno-grid'); grid.innerHTML=''; kenoSelected=[]; for(let i=1;i<=80;i++){ let btn=document.createElement('div'); btn.className='keno-num'; btn.innerText=i; btn.onclick=()=>{ if(kenoSelected.includes(i)){ kenoSelected=kenoSelected.filter(n=>n!==i); btn.classList.remove('selected'); } else if(kenoSelected.length<5){ kenoSelected.push(i); btn.classList.add('selected'); } }; grid.appendChild(btn); } }
+    function playKeno(){ if(isPlaying || kenoSelected.length!==5) { alert("Выберите 5 чисел"); return; } balance-=bets[betIdx]; let drawn=[]; for(let i=0;i<20;i++){ let r; do{ r=Math.floor(Math.random()*80)+1; }while(drawn.includes(r)); drawn.push(r); } let matches=kenoSelected.filter(n=>drawn.includes(n)).length; let paytable=[0,0,0,1,2,10]; let mult=paytable[matches]||0; let win=mult*bets[betIdx]; balance+=win; document.getElementById('keno-result').innerHTML=`Выпало: ${drawn.slice(0,10).join(', ')}... | Совпадений: ${matches} | Выигрыш: ${win.toFixed(2)}`; updateUI(); finalizeGame(); }
+    // ========== VIDEO POKER ==========
+    function initPokerDeck(){ let ranks=['2','3','4','5','6','7','8','9','10','J','Q','K','A']; let suits=['♥','♦','♣','♠']; let deck=[]; for(let r of ranks) for(let s of suits) deck.push({rank:r,suit:s, rankVal: ranks.indexOf(r)}); pokerDeck=shuffle(deck); }
+    function drawPoker(){ if(isPlaying) return; balance-=bets[betIdx]; pokerHand=[]; for(let i=0;i<5;i++) pokerHand.push(pokerDeck.pop()); pokerHeld.fill(false); pokerAfterDraw=false; updatePokerUI(); document.getElementById('poker-result').innerHTML='Выберите карты для удержания и нажмите "ОБМЕН"'; }
+    function holdAndDraw(){ if(isPlaying || pokerAfterDraw) return; for(let i=0;i<5;i++) if(!pokerHeld[i]) pokerHand[i]=pokerDeck.pop(); pokerAfterDraw=true; let winnings=evaluatePokerHand(pokerHand); let winAmt=winnings*bets[betIdx]; balance+=winAmt; document.getElementById('poker-result').innerHTML=`Комбинация: ${winnings>0?`Выигрыш ${winAmt.toFixed(2)}`:'Ничего'}`; updatePokerUI(); updateUI(); finalizeGame(); }
+    function evaluatePokerHand(hand){ let ranks=hand.map(c=>c.rankVal).sort((a,b)=>a-b); let isFlush=hand.every(c=>c.suit===hand[0].suit); let isStraight=ranks.every((v,i)=>i===0||v===ranks[i-1]+1); let counts=ranks.reduce((a,b)=>(a[b]=(a[b]||0)+1,a),{}); let values=Object.values(counts); if(isFlush && isStraight && ranks[0]===8) return 250; if(isFlush && isStraight) return 50; if(values.includes(4)) return 25; if(values.includes(3) && values.includes(2)) return 9; if(isFlush) return 6; if(isStraight) return 4; if(values.includes(3)) return 3; if(values.filter(v=>v===2).length===2) return 2; if(values.includes(2) && ranks.some(r=>r>=9)) return 1; return 0; }
+    function updatePokerUI(){ let container=document.getElementById('poker-cards'); container.innerHTML=''; pokerHand.forEach((card,i)=>{ let div=document.createElement('div'); div.className='poker-card'; div.innerHTML=`${card.rank}${card.suit}<button class="hold-btn" onclick="toggleHold(${i})">${pokerHeld[i]?'HOLD':'ДЕРЖАТЬ'}</button>`; container.appendChild(div); }); }
+    function toggleHold(i){ if(!pokerAfterDraw) pokerHeld[i]=!pokerHeld[i]; updatePokerUI(); }
+    // ========== CLICKER SLOT ==========
+    function spinClicker(){ if(isPlaying) return; balance-=bets[betIdx]; let symbols=['🍒','🍋','🍊','🍉','7️⃣','💎']; let r1=symbols[Math.floor(Math.random()*symbols.length)]; let r2=symbols[Math.floor(Math.random()*symbols.length)]; let r3=symbols[Math.floor(Math.random()*symbols.length)]; document.getElementById('clicker-symbol').innerHTML=`${r1} | ${r2} | ${r3}`; if(r1===r2 && r2===r3){ let mult=r1==='7️⃣'?10:r1==='💎'?20:5; let win=bets[betIdx]*mult; balance+=win; document.getElementById('clicker-result').innerHTML=`Джекпот! +${win.toFixed(2)}`; } else document.getElementById('clicker-result').innerHTML='Проигрыш'; updateUI(); finalizeGame(); }
+    // ========== TREASURE CHEST ==========
+    function openChest(idx){ if(isPlaying) return; balance-=bets[betIdx]; let prizes=[0,0.5,1,2,5,10]; let mult=prizes[Math.floor(Math.random()*prizes.length)]; let win=mult*bets[betIdx]; balance+=win; document.getElementById('chest-result').innerHTML=`Вы открыли сундук ${idx+1} и получили ${win.toFixed(2)} BYN`; updateUI(); finalizeGame(); }
+    // ========== HORSE RACING ==========
+    function initHorses(){ let track=document.getElementById('horse-track'); track.innerHTML=''; for(let i=1;i<=5;i++){ let div=document.createElement('div'); div.className='horse'; div.innerHTML=`<span class="horse-name">🐎 ${i}</span><div class="horse-progress"><div class="horse-bar" id="horse-bar-${i}"></div></div>`; div.onclick=()=>{ if(!isPlaying) startRace(i); }; track.appendChild(div); } }
+    function startRace(horseNum){ if(isPlaying) return; balance-=bets[betIdx]; isPlaying=true; let positions=[0,0,0,0,0]; let interval=setInterval(()=>{ for(let i=0;i<5;i++){ positions[i]+=Math.random()*15+5; document.getElementById(`horse-bar-${i+1}`).style.width=Math.min(positions[i],100)+'%'; } let winner=positions.findIndex(p=>p>=100); if(winner!==-1){ clearInterval(interval); if(winner+1===horseNum){ let win=bets[betIdx]*3; balance+=win; document.getElementById('horse-result').innerHTML=`Лошадь ${winner+1} победила! Вы выиграли ${win.toFixed(2)}`; } else document.getElementById('horse-result').innerHTML=`Лошадь ${winner+1} победила. Проигрыш.`; isPlaying=false; updateUI(); finalizeGame(); } },100); }
     updateUI();
 </script>
 </body>
